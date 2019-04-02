@@ -1,0 +1,90 @@
+<div class="farris-main-area flex-column farris-overflow-y-hidden">
+    <div class="farris-header">
+        <div class="navbar p-0"><label class="farris-form-title mr-auto" for="page-header-title"> <span>
+                    {{'page-header-title'|lang:lang}}
+                </span></label>
+            <div class="btn-toolbar" id="page-header-toolbar">
+                <div class="d-none">
+                    <div class="farris-group-wrap">
+                        <div class="form-group farris-form-group"><label class="col-form-label"
+                                title="{{'accOrg'|lang:lang}}" for="accOrg"><span
+                                    class="farris-label-text">{{'accOrg'|lang:lang}}</span><span
+                                    class="farris-label-info text-danger">*</span></label>
+                            <div class="farris-input-wrap">
+                                <farris-lookup-grid id="accOrg" #accOrg [displayType]="'TreeList'"
+                                    [uri]="'root-viewmodel.newParent'" [idField]="'id'" [singleSelect]="true"
+                                    [pageSize]="20" [pageIndex]="1" [pagination]="true" [textField]="'name'"
+                                    [valueField]="'id'" [title]="" [showMaxButton]="true" [showCloseButton]="true"
+                                    [resizable]="true" [(UIStateBinding)]="viewModel['uiState']['newParent']"
+                                    name="accOrg" [dictPicked]="accOrgLookupPicked"></farris-lookup-grid>
+                                <div class="farris-feedback"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-none">
+                    <div class="farris-group-wrap">
+                        <div class="form-group farris-form-group"><label class="col-form-label"
+                                title="{{'multiAdminOrgs'|lang:lang}}" for="multiAdminOrgs"><span
+                                    class="farris-label-text">{{'multiAdminOrgs'|lang:lang}}</span><span
+                                    class="farris-label-info text-danger">*</span></label>
+                            <div class="farris-input-wrap">
+                                <farris-lookup-grid id="multiAdminOrgs" #adminOrgs [displayType]="'TreeList'"
+                                    [uri]="'root-viewmodel.adminOrgs'" [idField]="'id'" [singleSelect]="true"
+                                    [pageSize]="20" [pageIndex]="1" [pagination]="true" [textField]="'name.dfName'"
+                                    [valueField]="'id'" [title]="" [showMaxButton]="true" [showCloseButton]="true"
+                                    [resizable]="true" [(UIStateBinding)]="viewModel['uiState']['adminOrgs']"
+                                    name="multiAdminOrgs" [dictPicked]="multiAdminOrgsLookupPicked">
+                                </farris-lookup-grid>
+                                <div class="farris-feedback"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div><button class="btn btn-primary f-btn-ml" id="button-addSibling"
+                    (click)="viewModel.treeGridComponentViewmodel.AddSibling1()"
+                    [disabled]="!viewModel.stateMachine['canAdd']">{{'button-addSibling'|lang:lang}}</button><button
+                    class="btn btn-secondary f-btn-ml" id="button-addChild"
+                    (click)="viewModel.treeGridComponentViewmodel.AddChildOrg1()"
+                    [disabled]="!viewModel.stateMachine['canAdd']">{{'button-addChild'|lang:lang}}</button><button
+                    class="btn btn-secondary f-btn-ml" id="button-edit"
+                    (click)="viewModel.detailFormComponentViewmodel.Edit1()"
+                    [disabled]="!viewModel.stateMachine['canEdit'] || !viewModel.detailFormComponentViewmodel.uiState['canEdit']">{{'button-edit'|lang:lang}}</button><button
+                    class="btn btn-secondary f-btn-ml" id="button-save"
+                    (click)="viewModel.detailFormComponentViewmodel.SaveAccOrg1()"
+                    [disabled]="!viewModel.stateMachine['canSave']">{{'button-save'|lang:lang}}</button><button
+                    class="btn btn-secondary f-btn-ml" id="button-cancel"
+                    (click)="viewModel.detailFormComponentViewmodel.CancelAccOrg1()"
+                    [disabled]="!viewModel.stateMachine['canCancel']">{{'button-cancel'|lang:lang}}</button><button
+                    class="btn btn-secondary f-btn-ml" id="button-delete"
+                    (click)="viewModel.treeGridComponentViewmodel.DeleteAccOrg1()"
+                    [disabled]="!viewModel.stateMachine['canRemove']">{{'button-delete'|lang:lang}}</button><button
+                    class="btn btn-secondary f-btn-ml" id="button-enable"
+                    (click)="viewModel.treeGridComponentViewmodel.EnableAccOrg1()"
+                    [disabled]="!viewModel.stateMachine['canRemove']">{{'button-enable'|lang:lang}}</button><button
+                    class="btn btn-secondary f-btn-ml" id="button-changePosition"
+                    (click)="changePosition()"
+                    [disabled]="!viewModel.stateMachine['canRemove']">{{'button-changePosition'|lang:lang}}</button><button
+                    class="btn btn-secondary f-btn-ml" id="button-importAdmin"
+                    (click)="refAdminOrgs()"
+                    [disabled]="!viewModel.stateMachine['canRemove']">{{'button-importAdmin'|lang:lang}}</button>
+            </div>
+        </div>
+    </div>
+    <div class="row no-gutters flex-fill farris-split-section">
+        <div class="col-12 col-md-6 d-flex flex-column farris-lsection">
+            <app-treegridcomponent></app-treegridcomponent>
+        </div>
+        <div class="col-12 col-md-6 farris-rsection d-flex flex-column">
+            <app-detailformcomponent></app-detailformcomponent>
+            <kendo-tabstrip class="f-tabstrip-fill ng-tns-c25-2 k-widget k-tabstrip k-floatwrap k-header k-tabstrip-top"
+                id="detail-tab" [keepTabContent]="true">
+                <!DOCTYPE html>
+                <kendo-tabstrip-tab id="FIAccountingSet-tab-page" [title]="'核算账簿'" [selected]="true">
+                    <ng-template kendoTabContent>
+                        <app-fiaccountingsetcomponent></app-fiaccountingsetcomponent>
+                    </ng-template>
+                </kendo-tabstrip-tab>
+            </kendo-tabstrip>
+        </div>
+    </div>
+</div>
