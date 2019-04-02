@@ -145,23 +145,23 @@ export class GLAccDocEntryComponentViewmodel extends ViewModel {
       {
         "type": "GridField",
         "visible": true,
-        "id": "gridField_creditAmount",
+        "id": "gridField_debitAmount",
         "binding": {
           "type": "Form",
-          "path": "creditAmount"
+          "path": "debitAmount"
         },
-        "dataField": "creditAmount",
+        "dataField": "debitAmount",
         "dataType": "number",
         "format": "n8",
         "caption": "借方金额",
         "editor": {
           "type": "NumericBox",
           "visible": true,
-          "id": "gridFieldEditor_creditAmount",
+          "id": "gridFieldEditor_debitAmount",
           "size": {},
           "binding": {
             "type": "Form",
-            "path": "creditAmount"
+            "path": "debitAmount"
           },
           "readonly": false,
           "require": false,
@@ -181,23 +181,23 @@ export class GLAccDocEntryComponentViewmodel extends ViewModel {
       {
         "type": "GridField",
         "visible": true,
-        "id": "gridField_debitAmount",
+        "id": "gridField_creditAmount",
         "binding": {
           "type": "Form",
-          "path": "debitAmount"
+          "path": "creditAmount"
         },
-        "dataField": "debitAmount",
+        "dataField": "creditAmount",
         "dataType": "number",
         "format": "n8",
         "caption": "贷方金额",
         "editor": {
           "type": "NumericBox",
           "visible": true,
-          "id": "gridFieldEditor_debitAmount",
+          "id": "gridFieldEditor_creditAmount",
           "size": {},
           "binding": {
             "type": "Form",
-            "path": "debitAmount"
+            "path": "creditAmount"
           },
           "readonly": false,
           "require": false,
@@ -240,11 +240,11 @@ export class GLAccDocEntryComponentViewmodel extends ViewModel {
           "enumData": [
             {
               "value": "Credit",
-              "name": "借方"
+              "name": "贷方"
             },
             {
               "value": "Debit",
-              "name": "贷方"
+              "name": "借方"
             }
           ]
         },
@@ -257,11 +257,11 @@ export class GLAccDocEntryComponentViewmodel extends ViewModel {
         "enumData": [
           {
             "value": "Credit",
-            "name": "借方"
+            "name": "贷方"
           },
           {
             "value": "Debit",
-            "name": "贷方"
+            "name": "借方"
           }
         ]
       }

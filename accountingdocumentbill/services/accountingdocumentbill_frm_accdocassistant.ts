@@ -75,10 +75,12 @@ export class AccDocAssistanceService extends ListRepositoryService {
                                 if (bingdingID[1] === prop) {
                                     fields[i].visible = true;
                                     if (prop === 'foreignCurrencyID') {
+                                        //币种列是否可以编辑，单一外币不可编辑
                                         if (assColumnInfoList[j].other) {
                                             fields[i].readonly = true;
                                             fields[i].editor.readonly = true;
                                             const other = assColumnInfoList[j].other.split(',');
+                                            //币种关联属性
                                             currencyShow = {
                                                 foreignCurrencyID: other[0],
                                                 foreignCurrencyID_Accuracy: 0,
@@ -94,9 +96,11 @@ export class AccDocAssistanceService extends ListRepositoryService {
                                             fields[i].editor.readonly = false;
                                         }
                                     } else if (prop === 'exchangeRate') {
+                                        //汇率不可编辑
                                         if (assColumnInfoList[j].other) {
                                             fields[i].readonly = true;
                                             fields[i].editor.readonly = true;
+                                            //汇率值
                                             exchangeRate = Number(assColumnInfoList[j].other);
                                         }
                                     }
@@ -106,6 +110,7 @@ export class AccDocAssistanceService extends ListRepositoryService {
                         this.frameContext.appContext.getFrameContext('glaccdocassistance-component').uiState['CanAdd'] = true;
                         return this.createAss(year, accDocID, accDocEntryID).pipe(
                             switchMap(() => {
+                                //给汇率和单一币种赋值
                                 if (currencyShow) {
                                     setTimeout(() => {
                                         this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'foreignCurrencyID', 'foreignCurrencyID'], currencyShow.foreignCurrencyID, true);
@@ -257,6 +262,7 @@ export class AccDocAssistanceService extends ListRepositoryService {
                                 if (bingdingID[1] === prop) {
                                     fields[i].visible = true;
                                     if (prop === 'foreignCurrencyID') {
+                                        //币种列是否可以编辑，单一外币不可编辑
                                         if (assColumnInfoList[j].other) {
                                             fields[i].readonly = true;
                                             fields[i].editor.readonly = true;
