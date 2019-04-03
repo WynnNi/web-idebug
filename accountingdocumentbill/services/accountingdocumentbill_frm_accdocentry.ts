@@ -31,6 +31,7 @@ export class AccDocEntryService extends ListRepositoryService {
     public befRepository = <BefRepository<any>>this.repository;
     public restService = this.befRepository.restService;
     public baseUri = this.restService.baseUri;
+
     /**新增分录 */
     createAccDocEntry(year: string, accDocID: string) {
         this.loadingService.show();

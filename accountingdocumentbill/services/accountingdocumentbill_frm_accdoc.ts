@@ -34,6 +34,7 @@ export class AccDocService extends ListRepositoryService {
     public befRepository = <BefRepository<any>>this.repository;
     public restService = this.befRepository.restService;
     public baseUri = this.restService.baseUri;
+    public rootStateMachine = this.frameContext.appContext.getFrameContext('root-component').stateMachine;
     public rootUistate = this.frameContext.appContext.getFrameContext('root-component').uiState;
     public creditAmount0;
 
@@ -174,13 +175,13 @@ export class AccDocService extends ListRepositoryService {
     loadData() {
         this.befRepository['variableManager']['innerValueMap'].clear();
         this.amountChange();
-        const action = this.frameContext.appContext.getFrameContext('root-component').uiState['action'];
+        const action = this.rootUistate['action'];
         if (action) {
             this.commandService.execute(action);
-            this.frameContext.appContext.getFrameContext('root-component').uiState['Action2Button'] = false;
+            this.rootUistate['Action2Button'] = false;
         } else {
             this.commandService.execute('GetInitData1');
-            this.frameContext.appContext.getFrameContext('root-component').uiState['Action2Button'] = true;
+            this.rootUistate['Action2Button'] = true;
         }
     }
 
@@ -198,10 +199,10 @@ export class AccDocService extends ListRepositoryService {
             return this.catchError(res);
         }).pipe(
             map((data: any) => {
-                this.frameContext.appContext.getFrameContext('root-component').uiState['year'].value = data.year;
-                this.frameContext.appContext.getFrameContext('root-component').uiState['AccSet'].key = data.ledger;
-                this.frameContext.appContext.getFrameContext('root-component').uiState['accSet_VO'] = data.ledger;
-                this.frameContext.appContext.getFrameContext('root-component').uiState['AccDocType'].key = data.accDocType;
+                this.rootUistate['year'].value = data.year;
+                this.rootUistate['AccSet'].key = data.ledger;
+                this.rootUistate['accSet_VO'] = data.ledger;
+                this.rootUistate['AccDocType'].key = data.accDocType;
                 return of(true);
             }),
             switchMap(() => {
@@ -218,23 +219,23 @@ export class AccDocService extends ListRepositoryService {
 
 
     accSetAfterLookUp() {
-        const accSet = this.frameContext.appContext.getFrameContext('root-component').uiState['AccSet'].key;
-        this.frameContext.appContext.getFrameContext('root-component').uiState['accSet_VO'] = accSet;
+        const accSet = this.rootUistate['AccSet'].key;
+        this.rootUistate['accSet_VO'] = accSet;
 
         const actionAccDocTypeUri = `${this.baseUri}/service/GetAccDocTypeByAccSet`;
         const methodType = 'PUT';
         const queryParams = {};
         const options = {
             body: {
-                accSetID: this.frameContext.appContext.getFrameContext('root-component').uiState['AccSet'].key,
-                year: this.frameContext.appContext.getFrameContext('root-component').uiState['year'].value
+                accSetID: this.rootUistate['AccSet'].key,
+                year: this.rootUistate['year'].value
             }};
         const actionAccDocType$ = this.befRepository.restService.request(actionAccDocTypeUri, methodType, queryParams, options);
         return actionAccDocType$.catch((res: any) => {
             return this.catchError(res);
         }).pipe(
             switchMap((data: any) => {
-                this.frameContext.appContext.getFrameContext('root-component').uiState['AccDocType'] = {key: data.id, value: data.name};
+                this.rootUistate['AccDocType'] = {key: data.id, value: data.name};
                 return of(true);
             })
         );
@@ -244,12 +245,12 @@ export class AccDocService extends ListRepositoryService {
         const actionSessionUri = `${this.baseUri}/service/Cmp4CreateFISession`;
         const methodType = 'PUT';
         const queryParams1 = {};
-        const date = this.frameContext.appContext.getFrameContext('root-component').uiState['AccDocDate'];
+        const date = this.rootUistate['AccDocDate'];
         const bizDate = this.factoryDateTo8(date);
         const optionsSession = {
             body: {
                 accOrgID: '',
-                ledger: this.frameContext.appContext.getFrameContext('root-component').uiState['AccSet'].key,
+                ledger: this.rootUistate['AccSet'].key,
                 bizDate: bizDate
             }};
         const actionSession$ = this.befRepository.restService.request(actionSessionUri, methodType, queryParams1, optionsSession);
@@ -257,19 +258,19 @@ export class AccDocService extends ListRepositoryService {
             return this.catchError(res);
         }).pipe(
             map((data: any) => {
-                this.frameContext.appContext.getFrameContext('root-component').uiState['year_VO'] = data.FISession_AccYear;
-                this.frameContext.appContext.getFrameContext('root-component').uiState['period_VO'] = data.FISession_PeriodID;
-                this.frameContext.appContext.getFrameContext('root-component').uiState['accOrg_VO'] = data.FISession_AccOrgID;
-                this.frameContext.appContext.getFrameContext('root-component').uiState['year'].value = data.FISession_AccYear;
-                this.frameContext.appContext.getFrameContext('root-component').uiState['chartOfAccount_VO'] = data.FISession_ChartOfAccountID;
-                this.frameContext.appContext.getFrameContext('root-component').uiState['standardCurrency_VO'] = data.FISession_StandardCurrencyID;
-                this.frameContext.appContext.getFrameContext('root-component').uiState['bizDate_VO'] = data.FISession_BizDate;
-                this.frameContext.appContext.getFrameContext('root-component').uiState['accCanlendar_VO'] = data.FISession_AccCalendarID;
-                this.frameContext.appContext.getFrameContext('root-component').uiState['beginDate_VO'] = data.FISession_PeriodBeginDate;
-                this.frameContext.appContext.getFrameContext('root-component').uiState['endDateccSet_VO'] = data.FISession_PeriodEndDate;
-                this.frameContext.appContext.getFrameContext('root-component').uiState['Period'] = data.FISession_PeriodID;
-                this.frameContext.appContext.getFrameContext('root-component').uiState['PeriodBeginDate'] = data.FISession_PeriodBeginDate;
-                this.frameContext.appContext.getFrameContext('root-component').uiState['PeriodEndDate'] = data.FISession_PeriodEndDate;
+                this.rootUistate['year_VO'] = data.FISession_AccYear;
+                this.rootUistate['period_VO'] = data.FISession_PeriodID;
+                this.rootUistate['accOrg_VO'] = data.FISession_AccOrgID;
+                this.rootUistate['year'].value = data.FISession_AccYear;
+                this.rootUistate['chartOfAccount_VO'] = data.FISession_ChartOfAccountID;
+                this.rootUistate['standardCurrency_VO'] = data.FISession_StandardCurrencyID;
+                this.rootUistate['bizDate_VO'] = data.FISession_BizDate;
+                this.rootUistate['accCanlendar_VO'] = data.FISession_AccCalendarID;
+                this.rootUistate['beginDate_VO'] = data.FISession_PeriodBeginDate;
+                this.rootUistate['endDateccSet_VO'] = data.FISession_PeriodEndDate;
+                this.rootUistate['Period'] = data.FISession_PeriodID;
+                this.rootUistate['PeriodBeginDate'] = data.FISession_PeriodBeginDate;
+                this.rootUistate['PeriodEndDate'] = data.FISession_PeriodEndDate;
                 return data;
             })
         );
@@ -282,7 +283,7 @@ export class AccDocService extends ListRepositoryService {
         const queryParams = {};
         const options = {};
         const year = new Date().getFullYear().toString();
-        this.frameContext.appContext.getFrameContext('root-component').uiState['year'] = year;
+        this.rootUistate['year'] = year;
         const actionInitAdd$ = this.befRepository.restService.request(actionUriInitAdd, methodType, queryParams, options);
         return actionInitAdd$.catch((res: any) => {
             return this.catchError(res);
@@ -290,7 +291,7 @@ export class AccDocService extends ListRepositoryService {
             map((data: any) => {
                 const entity = this.befRepository.buildEntity(data);
                 this.befRepository.entityCollection.addEntity(entity);
-                this.frameContext.appContext.getFrameContext('root-component').uiState['AccSet'].value = data.mainLedgerName;
+                this.rootUistate['AccSet'].value = data.mainLedgerName;
                 this.total(data.id);
                 return entity;
             }),
@@ -350,9 +351,9 @@ export class AccDocService extends ListRepositoryService {
         const methodType = 'PUT';
         const queryParams = {};
         const headers = new HttpHeaders({ 'Accept': 'application/json' });
-        const ledger = this.frameContext.appContext.getFrameContext('root-component').uiState['AccSet'].key;
-        const accDocTypeID = this.frameContext.appContext.getFrameContext('root-component').uiState['AccDocType'].key;
-        const periodID = this.frameContext.appContext.getFrameContext('root-component').uiState['Period'];
+        const ledger = this.rootUistate['AccSet'].key;
+        const accDocTypeID = this.rootUistate['AccDocType'].key;
+        const periodID = this.rootUistate['Period'];
         let options;
         switch (queryFlag) {
             case '1':
@@ -437,7 +438,7 @@ export class AccDocService extends ListRepositoryService {
     }
     /******供外部调用的查看 */
     loadAccDoc(year: string, accDocID: string, queryFlag: string) {
-        const state = this.frameContext.appContext.getFrameContext('root-component').stateMachine.context.state;
+        const state = this.rootStateMachine.context.state;
         if (state === 'add' || state === 'edit') {
             let s;
             if (state === 'add') {
@@ -487,8 +488,8 @@ export class AccDocService extends ListRepositoryService {
     /******按编号查找凭证后的载入事件 */
     /**********按编号查找抽出的方法 */
     lookUpAccDoc() {
-        const year = this.frameContext.appContext.getFrameContext('root-component').uiState['year'].value;
-        const accDocID = this.frameContext.appContext.getFrameContext('root-component').uiState['AccDocID'].key;
+        const year = this.rootUistate['year'].value;
+        const accDocID = this.rootUistate['AccDocID'].key;
         const actionYear$ = this.changeYear(year);
         this.loadingService.show();
         return actionYear$.catch((res: any) => {
@@ -504,7 +505,7 @@ export class AccDocService extends ListRepositoryService {
     }
     /***供外部调用的按编号查找方法 */
     lookUp() {
-        const state = this.frameContext.appContext.getFrameContext('root-component').stateMachine.context.state;
+        const state = this.rootStateMachine.context.state;
         if (state === 'add' || state === 'edit') {
             let s;
             if (state === 'add') {
@@ -554,7 +555,7 @@ export class AccDocService extends ListRepositoryService {
     /****取消操作 */
     cancelAccDoc(year: string, accDocID: string) {
         this.loadingService.show();
-        const state = this.frameContext.appContext.getFrameContext('root-component').stateMachine.context.state;
+        const state = this.rootStateMachine.context.state;
         if (state === 'edit') {
             return this.cardDataService.cancel().pipe(
                 switchMap(() => {
@@ -576,7 +577,7 @@ export class AccDocService extends ListRepositoryService {
                             this.loadingService.hide();
                             this.befRepository.entityCollection.clear();
                             this.stateMachineService.transit('InitAction');
-                            this.frameContext.appContext.getFrameContext('root-component').stateMachine['canAdd'] = true;
+                            this.rootStateMachine['canAdd'] = true;
                             return Observable.throw(res);
                         })
                     );
@@ -739,9 +740,9 @@ export class AccDocService extends ListRepositoryService {
         const methodType = 'PUT';
         const optionsName = {
             body: {
-                year: this.frameContext.appContext.getFrameContext('root-component').uiState['year'].value,
-                accSetID: this.frameContext.appContext.getFrameContext('root-component').uiState['AccSet'].key,
-                accDocTypeID: this.frameContext.appContext.getFrameContext('root-component').uiState['AccDocType'].key
+                year: this.rootUistate['year'].value,
+                accSetID: this.rootUistate['AccSet'].key,
+                accDocTypeID: this.rootUistate['AccDocType'].key
             }
         };
         const actionDataName$ = this.befRepository.restService.request(actionDataNameUri, methodType, queryParams1, optionsName);
@@ -749,8 +750,8 @@ export class AccDocService extends ListRepositoryService {
             return this.catchError(res);
         }).pipe(
             map((data: any) => {
-            this.frameContext.appContext.getFrameContext('root-component').uiState['AccSet'] = {key: this.frameContext.appContext.getFrameContext('root-component').uiState['AccSet'].key, value: data.accSetName};
-            this.frameContext.appContext.getFrameContext('root-component').uiState['AccDocType'] = {key: this.frameContext.appContext.getFrameContext('root-component').uiState['AccDocType'].key, value: data.accDocTypeName};
+            this.rootUistate['AccSet'] = {key: this.rootUistate['AccSet'].key, value: data.accSetName};
+            this.rootUistate['AccDocType'] = {key: this.rootUistate['AccDocType'].key, value: data.accDocTypeName};
         }));
     }
     /******封装获取账簿、类型名称方法，用于其它方法调用 */
@@ -760,7 +761,7 @@ export class AccDocService extends ListRepositoryService {
             const newAccDocID = currentId.toString();
             const accDoc = this.befRepository.entityCollection.getEntityById(newAccDocID) as GLAccountingDocumentEntity;
             const accDocType = accDoc.accDocTypeID.accDocTypeID;
-            this.frameContext.appContext.getFrameContext('root-component').uiState['AccDocType'].key = accDocType;
+            this.rootUistate['AccDocType'].key = accDocType;
             return this.getDataName();
         }
     }
@@ -800,8 +801,8 @@ export class AccDocService extends ListRepositoryService {
         let foreignCurrencyTo4;
         let unitPriceTo2;
         //计算外币
-        if (foreignCurrency-0 !== 0 || exchangeRate-0 !== 0) {
-            if (foreignCurrency-0 !== 0) {
+        if (foreignCurrency - 0 !== 0 || exchangeRate - 0 !== 0) {
+            if (foreignCurrency - 0 !== 0) {
                 foreignCurrencyTo4 = Number(foreignCurrency.toFixed(4));
             }
             const exchangeRateTo8 = Number((exchangeRate).toFixed(8));
@@ -814,8 +815,8 @@ export class AccDocService extends ListRepositoryService {
                 }, 0);
             }
             //计算单价
-        } else if (unitPrice-0 !== 0 || quantity-0 !== 0) {
-            if (unitPrice-0 !== 0) {
+        } else if (unitPrice - 0 !== 0 || quantity - 0 !== 0) {
+            if (unitPrice - 0 !== 0) {
                 unitPriceTo2 = Number(unitPrice.toFixed(2));
             }
             const quantityTo2 = Number((quantity).toFixed(2));
@@ -867,9 +868,9 @@ export class AccDocService extends ListRepositoryService {
         const accDoc = this.befRepository.entityCollection.getEntityById(accDocID) as GLAccountingDocumentEntity;
         //已记账审核不可编辑、删除
         if (!!accDoc.isBook || !!accDoc.isAudit) {
-            this.frameContext.appContext.getFrameContext('root-component').uiState['CantEdit'] = true;
+            this.rootUistate['CantEdit'] = true;
         } else {
-            this.frameContext.appContext.getFrameContext('root-component').uiState['CantEdit'] = false;
+            this.rootUistate['CantEdit'] = false;
         }
         //由辅助合计分录
         const accDocEntrys = accDoc.glAccDocEntrys;
@@ -894,12 +895,12 @@ export class AccDocService extends ListRepositoryService {
         this.frameContext.appContext.getFrameContext('glaccdocentry-component').uiState['TotalJF'] = this.thousand(sumJF.toFixed(2)) ;
         this.frameContext.appContext.getFrameContext('glaccdocentry-component').uiState['TotalDF'] = this.thousand(sumDF.toFixed(2));
         this.frameContext.appContext.getFrameContext('glaccdocentry-component').uiState['Difference'] = this.thousand((sumJF - sumDF).toFixed(2));
-        this.frameContext.appContext.getFrameContext('root-component').uiState['AccManager'] = accDoc.accManagerName;
-        this.frameContext.appContext.getFrameContext('root-component').uiState['Booker'] = accDoc.bookerName;
-        this.frameContext.appContext.getFrameContext('root-component').uiState['Cashier'] = accDoc.cashierName;
-        this.frameContext.appContext.getFrameContext('root-component').uiState['Auditor'] = accDoc.auditorName;
-        this.frameContext.appContext.getFrameContext('root-component').uiState['Approver'] = accDoc.approverName;
-        this.frameContext.appContext.getFrameContext('root-component').uiState['Maker'] = accDoc.makerName;
+        this.rootUistate['AccManager'] = accDoc.accManagerName;
+        this.rootUistate['Booker'] = accDoc.bookerName;
+        this.rootUistate['Cashier'] = accDoc.cashierName;
+        this.rootUistate['Auditor'] = accDoc.auditorName;
+        this.rootUistate['Approver'] = accDoc.approverName;
+        this.rootUistate['Maker'] = accDoc.makerName;
         if (Math.abs(sumJF) >= 99999999999) {
             //this.formMessageService.warning('金额超限，进行数据回滚！');
             setTimeout(() => {
@@ -932,9 +933,9 @@ export class AccDocService extends ListRepositoryService {
         if (currentId) {
             const accDocID = currentId.toString();
             const accDoc = this.befRepository.entityCollection.getEntityById(accDocID) as GLAccountingDocumentEntity;
-            const accSet = this.frameContext.appContext.getFrameContext('root-component').uiState['AccSet'].value;
+            const accSet = this.rootUistate['AccSet'].value;
             accDoc.accDwDisplay = accDoc.accOrgID.accOrgID_Name + '-' + accSet;
-            this.frameContext.appContext.getFrameContext('root-component').uiState['Period'] = accDoc.accPeriodID;
+            this.rootUistate['Period'] = accDoc.accPeriodID;
         } */
     }
 

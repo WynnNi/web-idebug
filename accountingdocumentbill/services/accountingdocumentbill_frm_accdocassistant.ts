@@ -33,6 +33,7 @@ export class AccDocAssistanceService extends ListRepositoryService {
     public befRepository = <BefRepository<any>>this.repository;
     public restService = this.befRepository.restService;
     public baseUri = this.restService.baseUri;
+    public rootUistate = this.frameContext.appContext.getFrameContext('root-component').uiState;
 
     /**新增辅助---选择科目时调用*/
     createAssistance(year: string, accDocID: string, accDocEntryID: string, accTitleID: string) {
@@ -41,7 +42,7 @@ export class AccDocAssistanceService extends ListRepositoryService {
         //币种、汇率前端赋值
         let currencyShow: any;
         let exchangeRate: number;
-        const ledger = this.frameContext.appContext.getFrameContext('root-component').uiState['AccSet'].key;
+        const ledger = this.rootUistate['AccSet'].key;
         this.loadingService.show();
         const methodType = 'PUT';
         const queryParams = {};
@@ -73,7 +74,7 @@ export class AccDocAssistanceService extends ListRepositoryService {
                                 const dataProp = assColumnInfoList[j].refColCode as string;
                                 const prop = dataProp.slice(0, 1).toLowerCase() + dataProp.substring(1, dataProp.length);
                                 if (bingdingID[1] === prop) {
-                                    fields[i].visible = true;
+                                    fields[i].visible = true;//动态显示列
                                     if (prop === 'foreignCurrencyID') {
                                         //币种列是否可以编辑，单一外币不可编辑
                                         if (assColumnInfoList[j].other) {
@@ -305,7 +306,7 @@ export class AccDocAssistanceService extends ListRepositoryService {
             headers: headers,
             body: {
                 originalCurrencyID: accDocAssistance.foreignCurrencyID.foreignCurrencyID,
-                bizDate: this.frameContext.appContext.getFrameContext('glaccdocentry-component').uiState['AccDocDate'],
+                bizDate: this.frameContext.appContext.getFrameContext('root-component').uiState['AccDocDate'],
                 RequestInfo: (this.befRepository).restService.buildRequestInfo()
             }
         };
