@@ -8,8 +8,8 @@
                     [disabled]="!viewModel.stateMachine['canAdd']">{{'button-add'|lang:lang}}</button><button
                     class="btn btn-secondary f-btn-ml" id="button-edit" (click)="viewModel.Edit1()"
                     [disabled]="!viewModel.stateMachine['canEdit'] || viewModel.uiState['CantEdit']">{{'button-edit'|lang:lang}}</button><button
-                    class="btn btn-secondary f-btn-ml" id="button-look" (click)="LookUp()"
-                    [disabled]="!viewModel.uiState['Action2Button']">{{'button-look'|lang:lang}}</button><button
+                    class="btn btn-secondary f-btn-ml" id="button-lookup" (click)="LookUp()"
+                    [disabled]="!viewModel.uiState['Action2Button']">{{'button-lookup'|lang:lang}}</button><button
                     class="btn btn-secondary f-btn-ml" id="button-save"
                     (click)="viewModel.basicFormViewmodel.SaveAccDoc1()"
                     [disabled]="!viewModel.stateMachine['canSave']">{{'button-save'|lang:lang}}</button><button
@@ -30,7 +30,45 @@
                     [disabled]="!viewModel.stateMachine['canLook']">{{'button-next'|lang:lang}}</button><button
                     class="btn btn-secondary f-btn-ml" id="button-last"
                     (click)="viewModel.basicFormViewmodel.ChangeAccDoc4()"
-                    [disabled]="!viewModel.uiState['Action2Button']">{{'button-last'|lang:lang}}</button></div>
+                    [disabled]="!viewModel.uiState['Action2Button']">{{'button-last'|lang:lang}}</button>
+
+                <div class="btn-group dropdown f-btn-ml" fDropdown (dpChangeEvent)="dpSectionState($event)">
+                    <button class="btn btn-secondary dropdown-toggle" id="button-business" fDropdownToggle type="button">
+                        {{'button-business'|lang:lang}}
+                    </button>
+                    <div class="dropdown-menu" fDropdownMenu>
+                        <li class="dropdown-item p-0"><button class="btn btn-secondary m-0" id="button-copythis">
+                                {{'button-copythis'|lang:lang}}</button>
+                        </li>
+                        <li class="dropdown-item p-0"><button class="btn btn-secondary m-0" id="button-copythis">
+                                {{'button-copythis'|lang:lang}}</button>
+                        </li>
+                    </div>
+                </div>
+                <div class="btn-group dropdown f-btn-ml" fDropdown (dpChangeEvent)="dpSectionState($event)">
+                    <button class="btn btn-secondary dropdown-toggle" id="button-look" fDropdownToggle type="button">
+                        {{'button-look'|lang:lang}}
+                    </button>
+                    <div class="dropdown-menu" fDropdownMenu>
+                        <li class="dropdown-item p-0"><button class="btn btn-secondary m-0" id="button-first"
+                                (click)="viewModel.basicFormViewmodel.ChangeAccDoc1()"
+                                [disabled]="!viewModel.uiState['Action2Button']">{{'button-first'|lang:lang}}</button>
+                        </li>
+                        <li class="dropdown-item p-0"><button class="btn btn-secondary m-0" id="button-previous"
+                                (click)="viewModel.basicFormViewmodel.ChangeAccDoc3()"
+                                [disabled]="!viewModel.stateMachine['canLook']">{{'button-previous'|lang:lang}}</button>
+                        </li>
+                        <li class="dropdown-item p-0"><button class="btn btn-secondary m-0" id="button-next"
+                                (click)="viewModel.basicFormViewmodel.ChangeAccDoc2()"
+                                [disabled]="!viewModel.stateMachine['canLook']">{{'button-next'|lang:lang}}</button>
+                        </li>
+                        <li class="dropdown-item p-0"><button class="btn btn-secondary m-0" id="button-last"
+                                (click)="viewModel.basicFormViewmodel.ChangeAccDoc4()"
+                                [disabled]="!viewModel.uiState['Action2Button']">{{'button-last'|lang:lang}}</button>
+                        </li>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="flex-fill farris-split-section f-cmp-px d-flex flex-column">
@@ -93,11 +131,11 @@
                 <div class="farris-group-wrap">
                     <div class="form-group farris-form-group">
                         <div class="farris-input-wrap">
-                            <farris-lookup-grid id="accDoc" #accDocCode [displayType]="'List'" [uri]="'root-viewmodel.AccDocID'"
-                                [idField]="'id'" [singleSelect]="true" [pageSize]="20" [pageIndex]="1"
-                                [pagination]="true" [textField]="'accDocCode'" [valueField]="'accDocCode'" [title]=""
-                                [showMaxButton]="true" [showCloseButton]="true" [resizable]="true"
-                                [(UIStateBinding)]="viewModel['uiState']['AccDocID']" name="accDoc"
+                            <farris-lookup-grid id="accDoc" #accDocCode [displayType]="'List'"
+                                [uri]="'root-viewmodel.AccDocID'" [idField]="'id'" [singleSelect]="true" [pageSize]="20"
+                                [pageIndex]="1" [pagination]="true" [textField]="'accDocCode'"
+                                [valueField]="'accDocCode'" [title]="" [showMaxButton]="true" [showCloseButton]="true"
+                                [resizable]="true" [(UIStateBinding)]="viewModel['uiState']['AccDocID']" name="accDoc"
                                 [dictPicked]="accDocLookupPicked"></farris-lookup-grid>
                             <div class="farris-feedback"></div>
                         </div>
@@ -118,8 +156,8 @@
                     <div class="form-group farris-form-group"><label class="col-form-label"
                             title="{{'total_kjzg'|lang:lang}}" for="total_kjzg"><span
                                 class="farris-label-text">{{'total_kjzg'|lang:lang}}</span></label>
-                        <div class="farris-input-wrap"><input class="form-control" style="border:none" id="total_kjzg" kendoTextBox
-                                [readonly]="true" [(ngModel)]="viewModel['uiState']['AccManager']"
+                        <div class="farris-input-wrap"><input class="form-control" style="border:none" id="total_kjzg"
+                                kendoTextBox [readonly]="true" [(ngModel)]="viewModel['uiState']['AccManager']"
                                 name="total_kjzg">
                             <div class="farris-feedback"></div>
                         </div>
@@ -131,8 +169,9 @@
                     <div class="form-group farris-form-group"><label class="col-form-label"
                             title="{{'name_jz'|lang:lang}}" for="name_jz"><span
                                 class="farris-label-text">{{'name_jz'|lang:lang}}</span></label>
-                        <div class="farris-input-wrap"><input class="form-control" style="border:none" id="name_jz" kendoTextBox
-                                [readonly]="true" [(ngModel)]="viewModel['uiState']['Booker']" name="name_jz">
+                        <div class="farris-input-wrap"><input class="form-control" style="border:none" id="name_jz"
+                                kendoTextBox [readonly]="true" [(ngModel)]="viewModel['uiState']['Booker']"
+                                name="name_jz">
                             <div class="farris-feedback"></div>
                         </div>
                     </div>
@@ -143,8 +182,9 @@
                     <div class="form-group farris-form-group"><label class="col-form-label"
                             title="{{'name_cn'|lang:lang}}" for="name_cn"><span
                                 class="farris-label-text">{{'name_cn'|lang:lang}}</span></label>
-                        <div class="farris-input-wrap"><input class="form-control" style="border:none" id="name_cn" kendoTextBox
-                                [readonly]="true" [(ngModel)]="viewModel['uiState']['Cashier']" name="name_cn">
+                        <div class="farris-input-wrap"><input class="form-control" style="border:none" id="name_cn"
+                                kendoTextBox [readonly]="true" [(ngModel)]="viewModel['uiState']['Cashier']"
+                                name="name_cn">
                             <div class="farris-feedback"></div>
                         </div>
                     </div>
@@ -155,8 +195,9 @@
                     <div class="form-group farris-form-group"><label class="col-form-label"
                             title="{{'name_sh'|lang:lang}}" for="name_sh"><span
                                 class="farris-label-text">{{'name_sh'|lang:lang}}</span></label>
-                        <div class="farris-input-wrap"><input class="form-control" style="border:none" id="name_sh" kendoTextBox
-                                [readonly]="true" [(ngModel)]="viewModel['uiState']['Auditor']" name="name_sh">
+                        <div class="farris-input-wrap"><input class="form-control" style="border:none" id="name_sh"
+                                kendoTextBox [readonly]="true" [(ngModel)]="viewModel['uiState']['Auditor']"
+                                name="name_sh">
                             <div class="farris-feedback"></div>
                         </div>
                     </div>
@@ -167,8 +208,9 @@
                     <div class="form-group farris-form-group"><label class="col-form-label"
                             title="{{'name_pz'|lang:lang}}" for="name_pz"><span
                                 class="farris-label-text">{{'name_pz'|lang:lang}}</span></label>
-                        <div class="farris-input-wrap"><input class="form-control" style="border:none" id="name_pz" kendoTextBox
-                                [readonly]="true" [(ngModel)]="viewModel['uiState']['Approver']" name="name_pz">
+                        <div class="farris-input-wrap"><input class="form-control" style="border:none" id="name_pz"
+                                kendoTextBox [readonly]="true" [(ngModel)]="viewModel['uiState']['Approver']"
+                                name="name_pz">
                             <div class="farris-feedback"></div>
                         </div>
                     </div>
@@ -179,8 +221,9 @@
                     <div class="form-group farris-form-group"><label class="col-form-label"
                             title="{{'name_zdr'|lang:lang}}" for="name_zdr"><span
                                 class="farris-label-text">{{'name_zdr'|lang:lang}}</span></label>
-                        <div class="farris-input-wrap"><input class="form-control" style="border:none" id="name_zdr" kendoTextBox
-                                [readonly]="true" [(ngModel)]="viewModel['uiState']['Maker']" name="name_zdr">
+                        <div class="farris-input-wrap"><input class="form-control" style="border:none" id="name_zdr"
+                                kendoTextBox [readonly]="true" [(ngModel)]="viewModel['uiState']['Maker']"
+                                name="name_zdr">
                             <div class="farris-feedback"></div>
                         </div>
                     </div>
