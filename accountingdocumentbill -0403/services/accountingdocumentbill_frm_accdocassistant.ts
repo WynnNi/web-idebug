@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { tap, switchMap, map } from 'rxjs/operators';
-import { Repository, BindingData, FrameContext, EntityFactory, ViewModel, EntityList } from '@farris/devkit';
+import { Repository, BindingData, FrameContext, EntityFactory, ViewModel } from '@farris/devkit';
 import { BefRepository } from '@farris/bef';
 import { FormLoadingService, ListRepositoryService, TreeDataService, BindingDataService, StateMachineService, SubListDataService } from '@farris/command-services';
 import { CardDataService, FormNotifyService } from '@farris/command-services';
@@ -12,14 +12,12 @@ import { GLAccDocAssistanceEntity } from '../models/entities/glaccdocassistancee
 import { GLAccDocAssistanceComponentViewmodel } from '../viewmodels/glaccdocassistancecomponentviewmodel';
 import { of } from 'rxjs/observable/of';
 import { HttpHeaders } from '@angular/common/http';
-import { AccDocService } from './accountingdocumentbill_frm_accdoc';
 
 @Injectable()
 export class AccDocAssistanceService extends ListRepositoryService {
     constructor(repository: Repository<any>,
         loadingService: FormLoadingService,
         public bindingData: BindingData,
-        public accDocService: AccDocService,
         public cardDataService: CardDataService,
         public treeDataService: TreeDataService,
         public subListDataService: SubListDataService,
@@ -48,7 +46,6 @@ export class AccDocAssistanceService extends ListRepositoryService {
         this.loadingService.show();
         const methodType = 'PUT';
         const queryParams = {};
-        //辅助的视图模型的dom
         const glAssistanceViewModel = this.frameContext.appContext.getFrameContext('glaccdocassistance-component').viewModel as GLAccDocAssistanceComponentViewmodel;
         const fields = glAssistanceViewModel.dom.dataGrid_GLAccDocAssistance.fields;
         for (let i = 0; i < fields.length; i++) {
@@ -66,14 +63,7 @@ export class AccDocAssistanceService extends ListRepositoryService {
             this.loadingService.show();
             const actionDisplay$ = this.befRepository.restService.request(actionUriDisplay, methodType, queryParams, optionsDisplay);
             return actionDisplay$.catch((res: any) => {
-                //选择科目后报错，清空科目
-                setTimeout(() => {
-                    this.bindingData.setValue(['glAccDocEntrys', 'accTitleID', 'accTitleID'], null, true);
-                    this.bindingData.setValue(['glAccDocEntrys', 'accTitleID', 'accTitleID_AccountTitle_Code'], null, true);
-                    this.bindingData.setValue(['glAccDocEntrys', 'accTitleID', 'accTitleID_AccountTitle_Name'], null, true);
-                    this.bindingData.setValue(['glAccDocEntrys', 'accTitleID', 'accTitleID_AccountTitle_FullName'], null, true);
-                }, 0);
-                return this.accDocService.catchError(res);
+                return this.catchError(res);
             }).pipe(
                 switchMap((data: any) => {
                     if (data.existsAss) {
@@ -84,7 +74,7 @@ export class AccDocAssistanceService extends ListRepositoryService {
                                 const dataProp = assColumnInfoList[j].refColCode as string;
                                 const prop = dataProp.slice(0, 1).toLowerCase() + dataProp.substring(1, dataProp.length);
                                 if (bingdingID[1] === prop) {
-                                    fields[i].visible = true; //动态显示列
+                                    fields[i].visible = true;//动态显示列
                                     if (prop === 'foreignCurrencyID') {
                                         //币种列是否可以编辑，单一外币不可编辑
                                         if (assColumnInfoList[j].other) {
@@ -154,8 +144,7 @@ export class AccDocAssistanceService extends ListRepositoryService {
                         this.loadingService.hide();
                         return of(false);
                     }
-                }),
-                switchMap(() => this.cardDataService.update()),
+                })
             );
         } else {
             this.frameContext.appContext.getFrameContext('glaccdocassistance-component').uiState['CanAdd'] = false;
@@ -188,7 +177,7 @@ export class AccDocAssistanceService extends ListRepositoryService {
         };
         const actionCreate$ = this.befRepository.restService.request(actionUriCreate, methodType, queryParams, optionsCreate);
         return actionCreate$.catch((res: any) => {
-            return this.accDocService.catchError(res);
+            return this.catchError(res);
         }).pipe(
             map((data: any) => {
                 const returnValue = data['returnValue'];
@@ -217,7 +206,7 @@ export class AccDocAssistanceService extends ListRepositoryService {
             };
             const actionDelete$ = this.befRepository.restService.request(actionUriDelete, methodType, queryParams, options);
             return actionDelete$.catch((res: any) => {
-                return this.accDocService.catchError(res);
+                return this.catchError(res);
             }).pipe(
                 tap(() => {
                     this.loadingService.hide();
@@ -261,7 +250,7 @@ export class AccDocAssistanceService extends ListRepositoryService {
             this.loadingService.show();
             const actionDisplay$ = this.befRepository.restService.request(actionUriDisplay, methodType, queryParams, options);
             return actionDisplay$.catch((res: any) => {
-                return this.accDocService.catchError(res);
+                return this.catchError(res);
             }).pipe(
                 map((data: any) => {
                     if (data.existsAss) {
@@ -323,7 +312,7 @@ export class AccDocAssistanceService extends ListRepositoryService {
         };
         const actionExchangeRate$ = this.befRepository.restService.request(actionUriExchangeRate, methodType, queryParams, options);
         return actionExchangeRate$.catch((res: any) => {
-            return this.accDocService.catchError(res);
+            return this.catchError(res);
         }).pipe(
             map((data: any) => {
                 const exchangeRate = data.returnValue;
@@ -335,4 +324,23 @@ export class AccDocAssistanceService extends ListRepositoryService {
         );
     }
 
+    /* //捕获异常 */
+    catchError(res: any) {
+        switch (res.status) {
+            case 500:
+                this.formMessageService.error(res.error.Message);
+                this.loadingService.hide();
+                break;
+            case 404:
+                this.formMessageService.error('找不到该请求的URL！');
+                this.loadingService.hide();
+                break;
+            case 502:
+                this.formMessageService.error('网络异常！');
+                break;
+            default:
+                break;
+        }
+        return Observable.throw(res);
+    }
 }

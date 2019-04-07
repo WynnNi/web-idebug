@@ -4,9 +4,9 @@ import { LinkViewService as LinkViewService1} from '../../services/accounitngdoc
 
 @Injectable()
 @NgCommandHandler({
-  commandName: 'LinkViewLoad1'
+  commandName: 'AccountAccDoc1'
 })
-export class LinkViewLoad1Handler extends CommandHandler {
+export class AccountAccDoc1Handler extends CommandHandler {
   constructor(
     public _LinkViewService: LinkViewService1
   ) {
@@ -15,11 +15,12 @@ export class LinkViewLoad1Handler extends CommandHandler {
 
   schedule() {
 
-    this.addTask('linkView1', (context: CommandContext) => {
+    this.addTask('accountAccDoc1', (context: CommandContext) => {
       const args = [
+        '1',
         ''
       ];
-      return this.invoke(this._LinkViewService, 'linkViewLoad', args, context);
+      return this.invoke(this._LinkViewService, 'accountAccDoc', args, context);
     });
   }
 

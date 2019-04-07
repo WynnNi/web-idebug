@@ -4,22 +4,6 @@
                     {{'page-header-title'|lang:lang}}
                 </span></label>
             <div class="btn-toolbar" id="page-header-toolbar">
-                <button class="btn btn-secondary f-btn-ml" id="button-check"
-                    (click)="viewModel.CheckAccDoc1()" [ngClass]="{'d-none': viewModel.uiState['funcID']!=='CheckAccountingDocument'}">
-                    {{'button-check'|lang:lang}}
-                </button>
-                <button class="btn btn-secondary f-btn-ml" id="button-cancelcheck"
-                    (click)="viewModel.CancelCheckAccDoc1()" [ngClass]="{'d-none': viewModel.uiState['funcID']!=='CheckAccountingDocument'}">
-                    {{'button-cancelcheck'|lang:lang}}
-                </button>
-                <button class="btn btn-secondary f-btn-ml" id="button-account"
-                    (click)="viewModel.AccountAccDoc1()" [ngClass]="{'d-none': viewModel.uiState['funcID']!=='ChargeAccountingDocument'}">
-                    {{'button-account'|lang:lang}}
-                </button>
-                <button class="btn btn-secondary f-btn-ml" id="button-cancelaccount"
-                    (click)="viewModel.CancelAccountAccDoc1()" [ngClass]="{'d-none': viewModel.uiState['funcID']!=='ChargeAccountingDocument'}">
-                    {{'button-cancelaccount'|lang:lang}}
-                </button>
                 <button class="btn btn-secondary f-btn-ml" id="button-add"
                     (click)="viewModel.basicFormViewmodel.AddByType1()"
                     [disabled]="!viewModel.stateMachine['canAdd']">
@@ -31,7 +15,7 @@
                     {{'button-edit'|lang:lang}}
                 </button><button
                     class="btn btn-secondary f-btn-ml" id="button-lookup" (click)="LookUp()"
-                    [disabled]="!!viewModel.uiState['funcID']">
+                    [disabled]="!viewModel.uiState['Action2Button']">
                     {{'button-lookup'|lang:lang}}
                 </button>
                 <button
@@ -81,8 +65,8 @@
                         {{'button-look'|lang:lang}}
                     </button>
                     <div class="dropdown-menu" fDropdownMenu>
-                        <li class="dropdown-item">
-                            <span id="button-first" (click)="viewModel.basicFormViewmodel.ChangeAccDoc1()">
+                        <li class="dropdown-item" [class.disabled]="!viewModel.uiState['Action2Button']">
+                            <span id="button-first" (click)="viewModel.uiState['Action2Button'] ? viewModel.basicFormViewmodel.ChangeAccDoc1() : null">
                                 {{'button-first'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item" [class.disabled]="!viewModel.stateMachine['canLook']">
@@ -93,8 +77,8 @@
                             <span (click)="viewModel.stateMachine['canLook'] ? viewModel.basicFormViewmodel.ChangeAccDoc2() : null" >
                                 {{'button-next'|lang:lang}}</span>
                         </li>
-                        <li class="dropdown-item">
-                            <span (click)="viewModel.basicFormViewmodel.ChangeAccDoc4()">
+                        <li class="dropdown-item"  [class.disabled]="!viewModel.uiState['Action2Button']">
+                            <span (click)="viewModel.uiState['Action2Button'] ? viewModel.basicFormViewmodel.ChangeAccDoc4() : null">
                                 {{'button-last'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item"><span (click)="LookUp()" >

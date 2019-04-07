@@ -59,6 +59,7 @@ export class AccDocService extends ListRepositoryService {
 
     //监听凭证头基本信息和借贷方金额的值变化事件
     amountChange() {
+        //监听分录金额的变化
         this.bindingData.changes.subscribe((change: Change) => {
             const path = change.path;
             //console.log(path);
@@ -110,17 +111,6 @@ export class AccDocService extends ListRepositoryService {
                     } else if (path[1] === 'debitAmount' && change.value === null) {
                         setTimeout(() => {
                             this.bindingData.setValue(['glAccDocEntrys', 'debitAmount'], 0, true, true);
-                        }, 0);
-                    }
-                    const accDocID = this.bindingData.list.currentId.toString();
-                    const accDoc = this.befRepository.entityCollection.getEntityById(accDocID) as GLAccountingDocumentEntity;
-                    //由辅助合计分录
-                    const accDocEntryID = this.bindingData.getValue(['glAccDocEntrys', 'id']);
-                    const accDocEntrys = accDoc.glAccDocEntrys;
-                    const accDocEntry = accDocEntrys.get(accDocEntryID) as GLAccDocEntryEntity;
-                    if (accDocEntry.glAccDocAssistances.count() === 1 && change.value !== null) {
-                        setTimeout(() => {
-                            this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'amount'], change.value, true, true);
                         }, 0);
                     }
                     return this.total('');
@@ -185,11 +175,13 @@ export class AccDocService extends ListRepositoryService {
     loadData() {
         this.befRepository['variableManager']['innerValueMap'].clear();
         this.amountChange();
-        const funcID = this.rootUistate['funcID'];
-        if (funcID) {
-            this.commandService.execute('LinkViewLoad1');
+        const action = this.rootUistate['action'];
+        if (action) {
+            this.commandService.execute(action);
+            this.rootUistate['Action2Button'] = false;
         } else {
             this.commandService.execute('GetInitData1');
+            this.rootUistate['Action2Button'] = true;
         }
     }
 
