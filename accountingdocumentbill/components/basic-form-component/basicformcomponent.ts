@@ -10,7 +10,6 @@ import { BasicFormViewmodelForm } from '../../viewmodels/form/basicformviewmodel
 
 import { BasicFormViewmodelUIState } from '../../viewmodels/uistate/basicformviewmodeluistate';
 import { AddByType1Handler } from '../../viewmodels/handlers/addbytype1handler';
-import { InitAdd1Handler } from '../../viewmodels/handlers/initadd1handler';
 import { ChangeAccDoc1Handler } from '../../viewmodels/handlers/changeaccdoc1handler';
 import { ChangeAccDoc2Handler } from '../../viewmodels/handlers/changeaccdoc2handler';
 import { ChangeAccDoc3Handler } from '../../viewmodels/handlers/changeaccdoc3handler';
@@ -22,14 +21,14 @@ import { LookUp1Handler } from '../../viewmodels/handlers/lookup1handler';
 import { CancelAccDoc1Handler } from '../../viewmodels/handlers/cancelaccdoc1handler';
 import { AccDocService as AccDocService1 } from '../../services/accountingdocumentbill_frm_accdoc';
 import { AccDocEntryService as AccDocEntryService1 } from '../../services/accountingdocumentbill_frm_accdocentry';
-import { CommonService } from '../../services/accdoccommonservice';
+import { CommonService } from '../../services/commonservice';
+import { AccDocCommonService as AccDocCommonService1} from '../../services/accountingdocumentbill_frm_commonservice';
 
 @Component({
   selector: 'app-basicformcomponent',
   templateUrl: './basicformcomponent.html',
   providers: [
     { provide: COMMAND_HANDLERS_TOKEN, useClass: AddByType1Handler, multi: true },
-    { provide: COMMAND_HANDLERS_TOKEN, useClass: InitAdd1Handler, multi: true },
     { provide: COMMAND_HANDLERS_TOKEN, useClass: ChangeAccDoc1Handler, multi: true },
     { provide: COMMAND_HANDLERS_TOKEN, useClass: ChangeAccDoc2Handler, multi: true },
     { provide: COMMAND_HANDLERS_TOKEN, useClass: ChangeAccDoc3Handler, multi: true },
@@ -48,6 +47,7 @@ import { CommonService } from '../../services/accdoccommonservice';
     { provide: Form, useClass: BasicFormViewmodelForm },
     { provide: UIState, useClass: BasicFormViewmodelUIState },
     CommonService,
+    AccDocCommonService1,
     AccDocService1,
     AccDocEntryService1,
     { provide: ViewModel, useClass: BasicFormViewmodel }

@@ -12,8 +12,7 @@ import { GLAccDocAssistanceEntity } from '../models/entities/glaccdocassistancee
 import { GLAccDocAssistanceComponentViewmodel } from '../viewmodels/glaccdocassistancecomponentviewmodel';
 import { of } from 'rxjs/observable/of';
 import { HttpHeaders } from '@angular/common/http';
-import { AccDocService } from './accountingdocumentbill_frm_accdoc';
-import { CommonService } from './accdoccommonservice';
+import { CommonService } from './commonservice';
 
 @Injectable()
 export class AccDocAssistanceService extends ListRepositoryService {
@@ -21,7 +20,6 @@ export class AccDocAssistanceService extends ListRepositoryService {
         loadingService: FormLoadingService,
         public commonService: CommonService,
         public bindingData: BindingData,
-        public accDocService: AccDocService,
         public cardDataService: CardDataService,
         public treeDataService: TreeDataService,
         public subListDataService: SubListDataService,

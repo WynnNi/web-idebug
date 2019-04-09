@@ -29,14 +29,6 @@ export class BasicFormViewmodel extends ViewModel {
   public AddByType1(): Observable<any> { return; }
 
   @NgCommand({
-    name: 'InitAdd1',
-    params: {
-
-    }
-  })
-  public InitAdd1(): Observable<any> { return; }
-
-  @NgCommand({
     name: 'ChangeAccDoc1',
     params: {
       year: '{UISTATE~/root-component/year}',

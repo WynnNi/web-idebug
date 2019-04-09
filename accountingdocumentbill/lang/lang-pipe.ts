@@ -103,7 +103,7 @@ export const lang = {
     "button-account":"记账",
     "button-cancelaccount":"取消记账",
     "button-check":"审核",
-    "button-cancecheck":"取消审核",
+    "button-cancelcheck":"取消审核",
     "button-approve":"批准",
     "button-cancelapprove":"取消批准",
     "button-signature":"签字",

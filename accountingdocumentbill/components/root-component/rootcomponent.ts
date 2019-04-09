@@ -32,13 +32,14 @@ import { CancelCheckAccDoc1Handler } from '../../viewmodels/handlers/cancelcheck
 import { AccountAccDoc1Handler } from '../../viewmodels/handlers/accountaccdoc1handler';
 import { CancelAccountAccDoc1Handler } from '../../viewmodels/handlers/cancelaccountaccdoc1';
 import { LinkViewService as LinkViewService1} from '../../services/accounitngdocumentbill_frm_linkview';
-import { CommonService } from '../../services/accdoccommonservice';
+import { CommonService } from '../../services/commonservice';
 import { MessageShow1Handler } from '../../viewmodels/handlers/messageshow1handler';
 import { CopyThisAccDoc1Handler } from '../../viewmodels/handlers/copythisaccdoc1handler';
 import { ApproveAccDoc1Handler } from '../../viewmodels/handlers/approveaccdoc1handler';
 import { CancelApproveAccDoc1Handler } from '../../viewmodels/handlers/cancelapproveaccdoc1handler';
 import { SignatureAccDoc1Handler } from '../../viewmodels/handlers/signatureaccdoc1handler';
 import { CancelSignatureAccDoc1Handler } from '../../viewmodels/handlers/cancelsignature1handler';
+import { AccDocCommonService as AccDocCommonService1} from '../../services/accountingdocumentbill_frm_commonservice';
 
 @Component({
   selector: 'app-rootcomponent',
@@ -78,6 +79,7 @@ import { CancelSignatureAccDoc1Handler } from '../../viewmodels/handlers/cancels
     { provide: Form, useClass: RootViewmodelForm },
     { provide: StateMachine, useClass: RootViewmodelStateMachine },
     { provide: UIState, useClass: RootViewmodelUIState },
+    AccDocCommonService1,
     AccDocService1,
     AccDocEntryService1,
     LinkViewService1,

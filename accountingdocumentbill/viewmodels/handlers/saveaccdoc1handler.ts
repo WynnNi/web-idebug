@@ -4,6 +4,7 @@ import { CardDataService as CardDataService1 } from '@farris/command-services';
 import { StateMachineService as StateMachineService1 } from '@farris/command-services';
 import { AccDocService as AccDocService1 } from '../../services/accountingdocumentbill_frm_accdoc';
 import { AccDocEntryService as AccDocEntryService1 } from '../../services/accountingdocumentbill_frm_accdocentry';
+import { AccDocCommonService } from '../../services/accountingdocumentbill_frm_commonservice';
 
 @Injectable()
 @NgCommandHandler({
@@ -13,6 +14,7 @@ export class SaveAccDoc1Handler extends CommandHandler {
   constructor(
     public _CardDataService1: CardDataService1,
     public _StateMachineService1: StateMachineService1,
+    public _AccDocCommonService1: AccDocCommonService,
     public _AccDocService1: AccDocService1,
     public _AccDocEntryService1: AccDocEntryService1
   ) {
@@ -42,7 +44,7 @@ export class SaveAccDoc1Handler extends CommandHandler {
         '',
         ''
       ];
-      return this.invoke(this._AccDocService1, 'total', args, context);
+      return this.invoke(this._AccDocCommonService1, 'total', args, context);
     });
 
 
@@ -50,7 +52,7 @@ export class SaveAccDoc1Handler extends CommandHandler {
       const args = [
         ''
       ];
-      return this.invoke(this._AccDocService1, 'entryAmount', args, context);
+      return this.invoke(this._AccDocCommonService1, 'entryAmount', args, context);
     });
 
 

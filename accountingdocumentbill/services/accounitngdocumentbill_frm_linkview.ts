@@ -6,19 +6,19 @@ import { CardDataService, FormNotifyService } from '@farris/command-services';
 import { MessagerService } from '@farris/ui';
 import { HttpHeaders } from '@angular/common/http';
 import { switchMap, tap } from 'rxjs/operators';
-import { AccDocService } from './accountingdocumentbill_frm_accdoc';
 import { of } from 'rxjs/observable/of';
 import { AccDocEntryService } from './accountingdocumentbill_frm_accdocentry';
-import { CommonService } from './accdoccommonservice';
+import { CommonService } from './commonservice';
+import { AccDocCommonService } from './accountingdocumentbill_frm_commonservice';
 
 @Injectable()
 export class LinkViewService extends ListRepositoryService {
     constructor(repository: Repository<any>,
         loadingService: FormLoadingService,
         public commonService: CommonService,
+        public accDocCommonService: AccDocCommonService,
         public accDocEntryService: AccDocEntryService,
         public bindingData: BindingData,
-        public accDocService: AccDocService,
         public cardDataService: CardDataService,
         public treeDataService: TreeDataService,
         public commandService: CommandService,
@@ -43,7 +43,7 @@ export class LinkViewService extends ListRepositoryService {
         const year = this.rootUistate['funcYear'];
         const accDocID = this.rootUistate['funcAccDocID'];
         this.loadingService.show();
-        return this.accDocService.changeYear(year).catch((res: any) => {
+        return this.accDocCommonService.changeYear(year).catch((res: any) => {
             return this.commonService.catchError(res);
         }).pipe(
             switchMap(() => {
@@ -54,10 +54,10 @@ export class LinkViewService extends ListRepositoryService {
                 return of(true);
             }),
             switchMap(() => {
-                return this.accDocService.getNowDataName();
+                return this.accDocCommonService.getNowDataName();
             }),
             switchMap(() => {
-                this.accDocService.entryAmount();
+                this.accDocCommonService.entryAmount();
                 return of(true);
             }),
             switchMap(() => {
@@ -81,7 +81,7 @@ export class LinkViewService extends ListRepositoryService {
         const queryParams = {};
         const year = this.rootUistate['funcYear'];
         const funcID = this.rootUistate['funcID'];
-        const filter = JSON.parse(this.rootUistate['funcFilter']);
+        //const filter = JSON.parse(this.rootUistate['funcFilter']);
         const accDocID = this.bindingData.list.currentId;
         if (!accDocID) {
             return of(false);
@@ -89,12 +89,12 @@ export class LinkViewService extends ListRepositoryService {
         this.loadingService.show();
         const options = {
             body: {
-                ledger: filter.ledgerID,
-                year: year,
+                ledger: this.rootUistate['accSet_VO'],//filter.ledgerID,
+                year: this.rootUistate['year'].value,//year,
                 listAccDocID: [accDocID],
-                periodID: filter.accPeriodID,
-                funcID: funcID,
-                accOrgID: filter.accOrgID,
+                periodID: this.rootUistate['period_VO'],//filter.accPeriodID,
+                funcID: 'ZW006',//funcID,
+                accOrgID: this.rootUistate['accOrg_VO'],//filter.accOrgID,
 
             }
         };
@@ -102,6 +102,27 @@ export class LinkViewService extends ListRepositoryService {
         return actionCheck$.catch((res: any) => {
             return this.commonService.catchError(res);
         }).pipe(
+            switchMap((data: any) => {
+                let report = '';
+                if (flag === '1') {
+                    report = '审核成功' + data[0] + '条；审核失败' + data[1] + '条。' + '<br>';
+                } else {
+                    report = '取消审核成功' + data[0] + '条；取消审核失败' + data[1] + '条。' + '<br>';
+                }
+                report = report + '失败原因：' + '<br>';
+                for (let i = 2; i < data.length; i++) {
+                    report = report + data[i] + '<br>';
+                }
+                report = '<pre>' + report + '<pre>';
+                const options = {
+                  title: '凭证审核报告',
+                  showMaxButton: true,
+                  width: 600,
+                  height: 400
+                };
+                this.formMessageService.show('凭证审核报告', report, options);
+                return of(true);
+            }),
             switchMap(() => {
                 return  this.cardDataService.update();
             }),
@@ -127,7 +148,7 @@ export class LinkViewService extends ListRepositoryService {
         const options = {
             body: {
                 year: year,
-                accDocID: accDocID,
+                accDocID: [accDocID],
                 flag: flag,
                 accOrgID: filter.accOrgID,
                 ledger: filter.ledgerID,
@@ -138,6 +159,27 @@ export class LinkViewService extends ListRepositoryService {
         return actionAccount$.catch((res: any) => {
             return this.commonService.catchError(res);
         }).pipe(
+            switchMap((data: any) => {
+                let report = '';
+                if (flag === '1') {
+                    report = '记账成功' + data[0] + '条；记账失败' + data[1] + '条。' + '<br>';
+                } else {
+                    report = '取消记账成功' + data[0] + '条；取消记账失败' + data[1] + '条。' + '<br>';
+                }
+                report = report + '失败原因：' + '<br>';
+                for (let i = 2; i < data.length; i++) {
+                    report = report + data[i] + '<br>';
+                }
+                report = '<pre>' + report + '<pre>';
+                const options = {
+                  title: '凭证记账报告',
+                  showMaxButton: true,
+                  width: 600,
+                  height: 400
+                };
+                this.formMessageService.show('凭证记账报告', report, options);
+                return of(true);
+            }),
             switchMap(() => {
                 return  this.cardDataService.update();
             }),
@@ -150,7 +192,12 @@ export class LinkViewService extends ListRepositoryService {
 
     //批准、取消批准
     approveAccDoc(flag: string) {
-        const actionUriAccount = `${this.baseUri}/service/ApproveAccDoc`;
+        let actionUriApprove = '';
+        if (flag === '1') {
+            actionUriApprove = `${this.baseUri}/service/approvedaccdoc`;
+        } else {
+            actionUriApprove = `${this.baseUri}/service/cancelapprovedaccdoc`;
+        }
         const methodType = 'PUT';
         const queryParams = {};
         const year = this.rootUistate['funcYear'];
@@ -163,17 +210,38 @@ export class LinkViewService extends ListRepositoryService {
         const options = {
             body: {
                 year: year,
-                accDocID: accDocID,
+                accDocID: [accDocID],
                 flag: flag,
                 accOrgID: filter.accOrgID,
                 ledger: filter.ledgerID,
                 accPeriodID: filter.accPeriodID
             }
         };
-        const actionAccount$ = this.befRepository.restService.request(actionUriAccount, methodType, queryParams, options);
-        return actionAccount$.catch((res: any) => {
+        const actionApprove$ = this.befRepository.restService.request(actionUriApprove, methodType, queryParams, options);
+        return actionApprove$.catch((res: any) => {
             return this.commonService.catchError(res);
         }).pipe(
+            switchMap((data: any) => {
+                let report = '';
+                if (flag === '1') {
+                    report = '批准成功' + data[0] + '条；批准失败' + data[1] + '条。' + '<br>';
+                } else {
+                    report = '取消批准成功' + data[0] + '条；取消批准失败' + data[1] + '条。' + '<br>';
+                }
+                report = report + '失败原因：' + '<br>';
+                for (let i = 2; i < data.length; i++) {
+                    report = report + data[i] + '<br>';
+                }
+                report = '<pre>' + report + '<pre>';
+                const options = {
+                  title: '凭证批准报告',
+                  showMaxButton: true,
+                  width: 600,
+                  height: 400
+                };
+                this.formMessageService.show('凭证批准报告', report, options);
+                return of(true);
+            }),
             switchMap(() => {
                 return  this.cardDataService.update();
             }),
@@ -186,7 +254,12 @@ export class LinkViewService extends ListRepositoryService {
 
     //出纳签字、取消出纳签字
     signatureAccDoc(flag: string) {
-        const actionUriAccount = `${this.baseUri}/service/CashAccDoc`;
+        let actionUriSignature  = '';
+        if (flag === '1') {
+            actionUriSignature = `${this.baseUri}/service/signedaccdocbycashier`;
+        } else {
+            actionUriSignature  = `${this.baseUri}/service/canclesignedaccdocbycashier`;
+        }
         const methodType = 'PUT';
         const queryParams = {};
         const year = this.rootUistate['funcYear'];
@@ -199,17 +272,38 @@ export class LinkViewService extends ListRepositoryService {
         const options = {
             body: {
                 year: year,
-                accDocID: accDocID,
+                accDocID: [accDocID],
                 flag: flag,
                 accOrgID: filter.accOrgID,
                 ledger: filter.ledgerID,
                 accPeriodID: filter.accPeriodID
             }
         };
-        const actionAccount$ = this.befRepository.restService.request(actionUriAccount, methodType, queryParams, options);
-        return actionAccount$.catch((res: any) => {
+        const actionSignature$ = this.befRepository.restService.request(actionUriSignature , methodType, queryParams, options);
+        return actionSignature$.catch((res: any) => {
             return this.commonService.catchError(res);
         }).pipe(
+            switchMap((data: any) => {
+                let report = '';
+                if (flag === '1') {
+                    report = '出纳签字成功' + data[0] + '条；出纳签字失败' + data[1] + '条。' + '<br>';
+                } else {
+                    report = '取消出纳签字成功' + data[0] + '条；取消出纳签字失败' + data[1] + '条。' + '<br>';
+                }
+                report = report + '失败原因：' + '<br>';
+                for (let i = 2; i < data.length; i++) {
+                    report = report + data[i] + '<br>';
+                }
+                report = '<pre>' + report + '<pre>';
+                const options = {
+                  title: '出纳签字报告',
+                  showMaxButton: true,
+                  width: 600,
+                  height: 400
+                };
+                this.formMessageService.show('出纳签字报告', report, options);
+                return of(true);
+            }),
             switchMap(() => {
                 return  this.cardDataService.update();
             }),
@@ -255,10 +349,10 @@ export class LinkViewService extends ListRepositoryService {
                 return this.cardDataService.load(data);
             }),
             switchMap(() => {
-                return this.accDocService.getNowDataName();
+                return this.accDocCommonService.getNowDataName();
             }),
             switchMap(() => {
-                return this.accDocService.total('');
+                return this.accDocCommonService.total('');
             } ),
             tap(() => {
                 this.loadingService.hide();

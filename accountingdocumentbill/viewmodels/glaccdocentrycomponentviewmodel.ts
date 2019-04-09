@@ -167,7 +167,7 @@ export class GLAccDocEntryComponentViewmodel extends ViewModel {
           "require": false,
           "disable": false,
           "format": "n8",
-          "minValue": 0,
+          //"minValue": 0,
           "step": 1,
           "precision": 2
         },

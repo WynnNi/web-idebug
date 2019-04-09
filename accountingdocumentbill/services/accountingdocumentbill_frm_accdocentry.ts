@@ -10,8 +10,8 @@ import { GLAccDocEntryEntity } from '../models/entities/glaccdocentryentity';
 import { of } from 'rxjs/observable/of';
 import { HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AccDocService } from './accountingdocumentbill_frm_accdoc';
-import { CommonService } from './accdoccommonservice';
+import { CommonService } from './commonservice';
+import { AccDocCommonService } from './accountingdocumentbill_frm_commonservice';
 
 
 @Injectable()
@@ -20,7 +20,7 @@ export class AccDocEntryService extends ListRepositoryService {
         loadingService: FormLoadingService,
         public commonService: CommonService,
         public bindingData: BindingData,
-        public accDocService: AccDocService,
+        public accDocCommonService: AccDocCommonService,
         public cardDataService: CardDataService,
         public treeDataService: TreeDataService,
         public frameContext: FrameContext,
@@ -68,7 +68,7 @@ export class AccDocEntryService extends ListRepositoryService {
                 return of(true);
             }),
             switchMap(() => {
-                return this.accDocService.total(accDocID);
+                return this.accDocCommonService.total(accDocID);
             }),
             tap(() => {
                 this.loadingService.hide();
@@ -106,7 +106,7 @@ export class AccDocEntryService extends ListRepositoryService {
                     return of(true);
                 }),
                 switchMap(() => {
-                    return this.accDocService.total(accDocID);
+                    return this.accDocCommonService.total(accDocID);
                 }),
                 tap(() => {
                     this.loadingService.hide();
@@ -128,17 +128,17 @@ export class AccDocEntryService extends ListRepositoryService {
             const options = {
                 headers: headers,
                 body: {
-                    year:'2019',
+                    year: '2019',
                     accDocID: accDocID,
                     accDocEntryID: accDeocEntryID,
-                    index:'10'
+                    index: '10'
                 }
             };
             const actionCopy$ = this.befRepository.restService.request(actionUriCopy, methodType, queryParams, options);
             return actionCopy$.catch((res: any) => {
                 return this.commonService.catchError(res);
             }).pipe(
-                switchMap(() =>{
+                switchMap(() => {
                     return  this.cardDataService.update();
                 }),
                 tap(() => {
@@ -167,7 +167,7 @@ export class AccDocEntryService extends ListRepositoryService {
             return actionInsert$.catch((res: any) => {
                 return this.commonService.catchError(res);
             }).pipe(
-                switchMap(() =>{
+                switchMap(() => {
                     return  this.cardDataService.update();
                 }),
                 tap(() => {
@@ -196,7 +196,7 @@ export class AccDocEntryService extends ListRepositoryService {
             return actionMoveUp$.catch((res: any) => {
                 return this.commonService.catchError(res);
             }).pipe(
-                switchMap(() =>{
+                switchMap(() => {
                     return  this.cardDataService.update();
                 }),
                 tap(() => {
@@ -225,7 +225,7 @@ export class AccDocEntryService extends ListRepositoryService {
             return actionMoveDown$.catch((res: any) => {
                 return this.commonService.catchError(res);
             }).pipe(
-                switchMap(() =>{
+                switchMap(() => {
                     return  this.cardDataService.update();
                 }),
                 tap(() => {

@@ -3,6 +3,7 @@ import { CommandHandler, NgCommandHandler, CommandContext } from '@farris/devkit
 import { AccDocService as AccDocService1 } from '../../services/accountingdocumentbill_frm_accdoc';
 import { AccDocEntryService as AccDocEntryService1 } from '../../services/accountingdocumentbill_frm_accdocentry';
 import { AccDocAssistanceService as AccDocAssistanceService1 } from '../../services/accountingdocumentbill_frm_accdocassistant';
+import { AccDocCommonService as AccDocCommonService1} from '../../services/accountingdocumentbill_frm_commonservice';
 
 @Injectable()
 @NgCommandHandler({
@@ -10,6 +11,7 @@ import { AccDocAssistanceService as AccDocAssistanceService1 } from '../../servi
 })
 export class ChangeEntry1Handler extends CommandHandler {
   constructor(
+    public _AccDocCommonService1: AccDocCommonService1,
     public _AccDocService1: AccDocService1,
     public _AccDocEntryService1: AccDocEntryService1,
     public _AccDocAssistanceService1: AccDocAssistanceService1
@@ -35,7 +37,7 @@ export class ChangeEntry1Handler extends CommandHandler {
         '',
         ''
       ];
-      return this.invoke(this._AccDocService1, 'total', args, context);
+      return this.invoke(this._AccDocCommonService1, 'total', args, context);
     });
 
 

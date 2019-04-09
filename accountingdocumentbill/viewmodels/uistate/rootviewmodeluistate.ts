@@ -7,19 +7,10 @@ export class RootViewmodelUIState extends UIState {
   public CantEdit: boolean = false;
 
   @NgParam()
-  public PeriodEndDate: string = '';
-
-  @NgParam()
-  public PeriodBeginDate: string = '';
-
-  @NgParam()
   public AccDocID: any = {};
 
   @NgParam()
   public Action2Button: boolean = false;
-
-  @NgParam()
-  public Period: string = '';
 
   @NgParam()
   public AccDocDate: Date = new Date();

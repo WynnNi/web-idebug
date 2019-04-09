@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CommandHandler, NgCommandHandler, CommandContext } from '@farris/devkit';
 import { AccDocService as AccDocService1 } from '../../services/accountingdocumentbill_frm_accdoc';
 import { AccDocEntryService as AccDocEntryService1 } from '../../services/accountingdocumentbill_frm_accdocentry';
+import { AccDocCommonService } from '../../services/accountingdocumentbill_frm_commonservice';
 
 @Injectable()
 @NgCommandHandler({
@@ -9,6 +10,7 @@ import { AccDocEntryService as AccDocEntryService1 } from '../../services/accoun
 })
 export class MoveDownAccDocEntry1Handler extends CommandHandler {
   constructor(
+    public _AccDocCommonService1: AccDocCommonService,
     public _AccDocService1: AccDocService1,
     public _AccDocEntryService1: AccDocEntryService1
   ) {
@@ -31,7 +33,7 @@ export class MoveDownAccDocEntry1Handler extends CommandHandler {
       const args = [
         ''
       ];
-      return this.invoke(this._AccDocService1, 'entryAmount', args, context);
+      return this.invoke(this._AccDocCommonService1, 'entryAmount', args, context);
     });
 
 

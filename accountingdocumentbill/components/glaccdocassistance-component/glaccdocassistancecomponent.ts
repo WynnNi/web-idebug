@@ -18,11 +18,12 @@ import { GetExchangeRate1Handler } from '../../viewmodels/handlers/getexchangera
 import { AccDocService as AccDocService1 } from '../../services/accountingdocumentbill_frm_accdoc';
 import { AccDocEntryService as AccDocEntryService1 } from '../../services/accountingdocumentbill_frm_accdocentry';
 import { AccDocAssistanceService as AccDocAssistanceService1 } from '../../services/accountingdocumentbill_frm_accdocassistant';
-import { CommonService } from '../../services/accdoccommonservice';
+import { CommonService } from '../../services/commonservice';
 import { CopyAccDocAssistance1Handler } from '../../viewmodels/handlers/copyaccdocassistance1handler';
 import { InsertAccDocAssistance1Handler } from '../../viewmodels/handlers/insertaccdocassistance1handler';
 import { MoveUpAccDocAssistance1Handler } from '../../viewmodels/handlers/moveupaccdocassistance1handler';
 import { MoveDownAccDocAssistance1Handler } from '../../viewmodels/handlers/movedownaccdocassistance1handler';
+import { AccDocCommonService as AccDocCommonService1} from '../../services/accountingdocumentbill_frm_commonservice';
 
 @Component({
   selector: 'app-glaccdocassistancecomponent',
@@ -47,6 +48,7 @@ import { MoveDownAccDocAssistance1Handler } from '../../viewmodels/handlers/move
     { provide: Form, useClass: GLAccDocAssistanceComponentViewmodelForm },
     { provide: UIState, useClass: GLAccDocAssistanceComponentViewmodelUIState },
     CommonService,
+    AccDocCommonService1,
     AccDocService1,
     AccDocEntryService1,
     AccDocAssistanceService1,

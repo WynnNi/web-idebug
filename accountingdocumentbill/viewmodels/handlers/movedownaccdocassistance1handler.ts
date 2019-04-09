@@ -37,7 +37,7 @@ export class MoveDownAccDocAssistance1Handler extends CommandHandler {
       return this.invoke(this._AccDocEntryService1, 'assistanceAmount', args, context);
     });
 
-    this.addLink('createAssistance', 'assistanceAmount', `1==1`);
+    this.addLink('moveDownAccDocAssistance1', 'assistanceAmount', `1==1`);
   }
 
 }

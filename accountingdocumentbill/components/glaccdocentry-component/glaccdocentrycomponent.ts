@@ -19,11 +19,12 @@ import { AmountCanEdit1Handler } from '../../viewmodels/handlers/amountcanedit1h
 import { AccDocService as AccDocService1 } from '../../services/accountingdocumentbill_frm_accdoc';
 import { AccDocEntryService as AccDocEntryService1 } from '../../services/accountingdocumentbill_frm_accdocentry';
 import { AccDocAssistanceService as AccDocAssistanceService1 } from '../../services/accountingdocumentbill_frm_accdocassistant';
-import { CommonService } from '../../services/accdoccommonservice';
+import { CommonService } from '../../services/commonservice';
 import { CopyAccDocEntry1Handler } from '../../viewmodels/handlers/copyaccdocentry1handler';
 import { InsertAccDocEntry1Handler } from '../../viewmodels/handlers/insertaccdocentry1handler';
 import { MoveUpAccDocEntry1Handler } from '../../viewmodels/handlers/moveupaccdocentry1handler';
 import { MoveDownAccDocEntry1Handler } from '../../viewmodels/handlers/movedownaccdocentry1handler';
+import { AccDocCommonService as AccDocCommonService1} from '../../services/accountingdocumentbill_frm_commonservice';
 
 @Component({
   selector: 'app-glaccdocentrycomponent',
@@ -49,6 +50,7 @@ import { MoveDownAccDocEntry1Handler } from '../../viewmodels/handlers/movedowna
     { provide: Form, useClass: GLAccDocEntryComponentViewmodelForm },
     { provide: UIState, useClass: GLAccDocEntryComponentViewmodelUIState },
     CommonService,
+    AccDocCommonService1,
     AccDocService1,
     AccDocEntryService1,
     AccDocAssistanceService1,

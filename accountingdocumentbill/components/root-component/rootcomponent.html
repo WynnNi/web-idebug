@@ -4,99 +4,100 @@
                     {{'page-header-title'|lang:lang}}
                 </span></label>
             <div class="btn-toolbar" id="page-header-toolbar">
-                <button class="btn btn-secondary f-btn-ml" id="button-check"
-                    (click)="viewModel.CheckAccDoc1()" [ngClass]="{'d-none': viewModel.uiState['funcID']!=='CheckAccountingDocument'}">
+                <button class="btn btn-secondary f-btn-ml" id="button-check" (click)="viewModel.CheckAccDoc1()"
+                [ngClass]="{'d-none': viewModel.uiState['funcID']!=='CheckAccountingDocument'}">
+                    <!--  -->
                     {{'button-check'|lang:lang}}
                 </button>
                 <button class="btn btn-secondary f-btn-ml" id="button-cancelcheck"
-                    (click)="viewModel.CancelCheckAccDoc1()" [ngClass]="{'d-none': viewModel.uiState['funcID']!=='CheckAccountingDocument'}">
+                    (click)="viewModel.CancelCheckAccDoc1()"
+                    [ngClass]="{'d-none': viewModel.uiState['funcID']!=='CheckAccountingDocument'}">
+                    <!--  -->
                     {{'button-cancelcheck'|lang:lang}}
                 </button>
-                <button class="btn btn-secondary f-btn-ml" id="button-account"
-                    (click)="viewModel.AccountAccDoc1()" [ngClass]="{'d-none': viewModel.uiState['funcID']!=='ChargeAccountingDocument'}">
+                <button class="btn btn-secondary f-btn-ml" id="button-account" (click)="viewModel.AccountAccDoc1()"
+                    [ngClass]="{'d-none': viewModel.uiState['funcID']!=='ChargeAccountingDocument'}">
                     {{'button-account'|lang:lang}}
                 </button>
                 <button class="btn btn-secondary f-btn-ml" id="button-cancelaccount"
-                    (click)="viewModel.CancelAccountAccDoc1()" [ngClass]="{'d-none': viewModel.uiState['funcID']!=='ChargeAccountingDocument'}">
+                    (click)="viewModel.CancelAccountAccDoc1()"
+                    [ngClass]="{'d-none': viewModel.uiState['funcID']!=='ChargeAccountingDocument'}">
                     {{'button-cancelaccount'|lang:lang}}
                 </button>
-                <button class="btn btn-secondary f-btn-ml" id="button-approve"
-                    (click)="viewModel.ApproveAccDoc1()" [ngClass]="{'d-none': viewModel.uiState['funcID']!=='ApprovedAccountingDocument'}">
+                <button class="btn btn-secondary f-btn-ml" id="button-approve" (click)="viewModel.ApproveAccDoc1()"
+                    [ngClass]="{'d-none': viewModel.uiState['funcID']!=='ApprovedAccountingDocument'}">
                     {{'button-approve'|lang:lang}}
                 </button>
                 <button class="btn btn-secondary f-btn-ml" id="button-cancelapprove"
-                    (click)="viewModel.CancelApproveAccDoc1()" [ngClass]="{'d-none': viewModel.uiState['funcID']!=='ApprovedAccountingDocument'}">
+                    (click)="viewModel.CancelApproveAccDoc1()"
+                    [ngClass]="{'d-none': viewModel.uiState['funcID']!=='ApprovedAccountingDocument'}">
                     {{'button-cancelapprove'|lang:lang}}
                 </button>
-                <button class="btn btn-secondary f-btn-ml" id="button-signature"
-                    (click)="viewModel.SignatureAccDoc1()" [ngClass]="{'d-none': viewModel.uiState['funcID']!=='SignedAccountingDocument'}">
+                <button class="btn btn-secondary f-btn-ml" id="button-signature" (click)="viewModel.SignatureAccDoc1()"
+                    [ngClass]="{'d-none': viewModel.uiState['funcID']!=='SignedAccountingDocument'}">
                     {{'button-signature'|lang:lang}}
                 </button>
                 <button class="btn btn-secondary f-btn-ml" id="button-cancelsignature"
-                    (click)="viewModel.CancelSignatureAccDoc1()" [ngClass]="{'d-none': viewModel.uiState['funcID']!=='SignedAccountingDocument'}">
+                    (click)="viewModel.CancelSignatureAccDoc1()"
+                    [ngClass]="{'d-none': viewModel.uiState['funcID']!=='SignedAccountingDocument'}">
                     {{'button-cancelsignature'|lang:lang}}
                 </button>
                 <button class="btn btn-secondary f-btn-ml" id="button-add"
-                    (click)="viewModel.basicFormViewmodel.AddByType1()"
-                    [disabled]="!viewModel.stateMachine['canAdd']">
+                    (click)="viewModel.basicFormViewmodel.AddByType1()" [disabled]="!viewModel.stateMachine['canAdd']">
                     {{'button-add'|lang:lang}}
                 </button>
-                <button
-                    class="btn btn-secondary f-btn-ml" id="button-edit" (click)="viewModel.Edit1()"
+                <button class="btn btn-secondary f-btn-ml" id="button-edit" (click)="viewModel.Edit1()"
                     [disabled]="!viewModel.stateMachine['canEdit'] || viewModel.uiState['CantEdit']">
                     {{'button-edit'|lang:lang}}
-                </button><button
-                    class="btn btn-secondary f-btn-ml" id="button-lookup" (click)="LookUp()"
-                    [disabled]="!!viewModel.uiState['funcID']">
-                    {{'button-lookup'|lang:lang}}
                 </button>
-                <button
-                    class="btn btn-secondary f-btn-ml" id="button-save"
+                <button class="btn btn-secondary f-btn-ml" id="button-save"
                     (click)="viewModel.basicFormViewmodel.SaveAccDoc1()"
                     [disabled]="!viewModel.stateMachine['canSave']">
                     {{'button-save'|lang:lang}}
                 </button>
-                <button
-                    class="btn btn-secondary f-btn-ml" id="button-cancel"
+                <button class="btn btn-secondary f-btn-ml" id="button-cancel"
                     (click)="viewModel.basicFormViewmodel.CancelAccDoc1()"
                     [disabled]="!viewModel.stateMachine['canCancel']">
                     {{'button-cancel'|lang:lang}}
                 </button>
-                <button
-                    class="btn btn-secondary f-btn-ml" id="button-delete"
+                <button class="btn btn-secondary f-btn-ml" id="button-delete"
                     (click)="viewModel.basicFormViewmodel.DeleteAccDoc1()"
                     [disabled]="!viewModel.stateMachine['canRemove'] || viewModel.uiState['CantEdit']">
                     {{'button-delete'|lang:lang}}
                 </button>
-                <button
-                    class="btn btn-secondary f-btn-ml" id="button-previous"
+                <button class="btn btn-secondary f-btn-ml" id="button-previous"
                     (click)="!viewModel.uiState['funcID'] ? viewModel.basicFormViewmodel.ChangeAccDoc3() : viewModel.ChangeAccDocOnLinkView3()"
                     [disabled]="!viewModel.stateMachine['canLook']">
                     {{'button-previous'|lang:lang}}
                 </button>
-                <button
-                    class="btn btn-secondary f-btn-ml" id="button-next"
+                <button class="btn btn-secondary f-btn-ml" id="button-next"
                     (click)="!viewModel.uiState['funcID'] ? viewModel.basicFormViewmodel.ChangeAccDoc2() : viewModel.ChangeAccDocOnLinkView2()"
                     [disabled]="!viewModel.stateMachine['canLook']">
                     {{'button-next'|lang:lang}}
                 </button>
+                <button class="btn btn-secondary f-btn-ml" id="button-lookup" (click)="LookUp()"
+                    [disabled]="!!viewModel.uiState['funcID']">
+                    {{'button-lookup'|lang:lang}}
+                </button>
                 <!-- 业务处理：作废凭证、取消作废、复制凭证、复制本凭证-->
                 <div class="btn-group dropdown f-btn-ml" fDropdown>
-                    <button class="btn btn-secondary dropdown-toggle" id="button-business" [disabled]="!viewModel.stateMachine['canEdit']" fDropdownToggle type="button">
+                    <button class="btn btn-secondary dropdown-toggle" id="button-business"
+                        [disabled]="!viewModel.stateMachine['canEdit']" fDropdownToggle type="button">
                         {{'button-business'|lang:lang}}
                     </button>
                     <div class="dropdown-menu" fDropdownMenu>
                         <li class="dropdown-item"><span (click)="viewModel.MessageShow1()" id="button-obsolete">
-                            {{'button-obsolete'|lang:lang}}</span>
+                                {{'button-obsolete'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item"><span (click)="viewModel.MessageShow1()" id="button-cancelobsolete">
-                            {{'button-cancelobsolete'|lang:lang}}</span>
+                                {{'button-cancelobsolete'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item"><span (click)="viewModel.MessageShow1()" id="button-copyaccdoc">
-                            {{'button-copyaccdoc'|lang:lang}}</span>
+                                {{'button-copyaccdoc'|lang:lang}}</span>
                         </li>
-                        <li class="dropdown-item"><span (click)="viewModel.CopyThisAccDoc1()" id="button-copythisaccdoc">
-                            {{'button-copythisaccdoc'|lang:lang}}</span>
+                        <li class="dropdown-item"><span (click)="viewModel.CopyThisAccDoc1()"
+                                id="button-copythisaccdoc">
+                                {{'button-copythisaccdoc'|lang:lang}}</span>
                         </li>
                     </div>
                 </div>
@@ -111,83 +112,86 @@
                                 {{'button-first'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item" [class.disabled]="!viewModel.stateMachine['canLook']">
-                            <span (click)="viewModel.stateMachine['canLook'] ? viewModel.basicFormViewmodel.ChangeAccDoc3() : null">
+                            <span
+                                (click)="viewModel.stateMachine['canLook'] ? viewModel.basicFormViewmodel.ChangeAccDoc3() : null">
                                 {{'button-previous'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item" [class.disabled]="!viewModel.stateMachine['canLook']">
-                            <span (click)="viewModel.stateMachine['canLook'] ? viewModel.basicFormViewmodel.ChangeAccDoc2() : null" >
+                            <span
+                                (click)="viewModel.stateMachine['canLook'] ? viewModel.basicFormViewmodel.ChangeAccDoc2() : null">
                                 {{'button-next'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item">
                             <span (click)="viewModel.basicFormViewmodel.ChangeAccDoc4()">
                                 {{'button-last'|lang:lang}}</span>
                         </li>
-                        <li class="dropdown-item"><span (click)="LookUp()" >
-                            {{'button-lookup'|lang:lang}}</span>
+                        <li class="dropdown-item"><span (click)="LookUp()">
+                                {{'button-lookup'|lang:lang}}</span>
                         </li>
                     </div>
                 </div>
                 <!-- 分录：新增、删除、复制、插入、上移、下移 -->
                 <div class="btn-group dropdown f-btn-ml" fDropdown>
                     <button class="btn btn-secondary dropdown-toggle" id="button-entry" fDropdownToggle type="button"
-                    [disabled]="!viewModel.stateMachine['canAddDetail']">{{'button-entry'|lang:lang}}
+                        [disabled]="!viewModel.stateMachine['canAddDetail']">{{'button-entry'|lang:lang}}
                     </button>
                     <div class="dropdown-menu" fDropdownMenu>
                         <li class="dropdown-item">
                             <span (click)="viewModel.gLAccDocEntryComponentViewmodel.CreateAccDocEntry1()">
-                            {{'GLAccDocEntry-button-add'|lang:lang}}</span>
+                                {{'GLAccDocEntry-button-add'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item">
                             <span (click)="viewModel.gLAccDocEntryComponentViewmodel.DeleteEntryByID1()">
-                            {{'GLAccDocEntry-button-remove'|lang:lang}}</span>
+                                {{'GLAccDocEntry-button-remove'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item">
                             <span (click)="viewModel.MessageShow1()">
-                            {{'button-moveup'|lang:lang}}</span>
+                                {{'button-moveup'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item">
                             <span (click)="viewModel.MessageShow1()">
-                            {{'button-movedown'|lang:lang}}</span>
+                                {{'button-movedown'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item">
                             <span (click)="viewModel.MessageShow1()">
-                            {{'button-insert'|lang:lang}}</span>
+                                {{'button-insert'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item">
                             <span (click)="viewModel.MessageShow1()">
-                            {{'button-copy'|lang:lang}}</span>
+                                {{'button-copy'|lang:lang}}</span>
                         </li>
                     </div>
                 </div>
                 <!-- 辅助：新增、删除、复制、插入、上移、下移 -->
                 <div class="btn-group dropdown f-btn-ml" fDropdown>
-                    <button class="btn btn-secondary dropdown-toggle" id="button-assistance" fDropdownToggle type="button"
-                    [disabled]="!viewModel.stateMachine['canAddDetail'] || !viewModel.gLAccDocAssistanceComponentViewmodel.uiState['CanAdd']">{{'button-assistance'|lang:lang}}
+                    <button class="btn btn-secondary dropdown-toggle" id="button-assistance" fDropdownToggle
+                        type="button"
+                        [disabled]="!viewModel.stateMachine['canAddDetail'] || !viewModel.gLAccDocAssistanceComponentViewmodel.uiState['CanAdd']">{{'button-assistance'|lang:lang}}
                     </button>
                     <div class="dropdown-menu" fDropdownMenu>
                         <li class="dropdown-item">
                             <span (click)="viewModel.gLAccDocAssistanceComponentViewmodel.CreateAss1()">
-                            {{'GLAccDocAssistance-button-add'|lang:lang}}</span>
+                                {{'GLAccDocAssistance-button-add'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item">
                             <span (click)="viewModel.gLAccDocAssistanceComponentViewmodel.DeleteAccDocAssistant1()">
-                            {{'GLAccDocAssistance-button-remove'|lang:lang}}</span>
+                                {{'GLAccDocAssistance-button-remove'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item">
                             <span (click)="viewModel.MessageShow1()">
-                            {{'button-moveup'|lang:lang}}</span>
+                                {{'button-moveup'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item">
                             <span (click)="viewModel.MessageShow1()">
-                            {{'button-movedown'|lang:lang}}</span>
+                                {{'button-movedown'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item">
                             <span (click)="viewModel.MessageShow1()">
-                            {{'button-insert'|lang:lang}}</span>
+                                {{'button-insert'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item">
                             <span (click)="viewModel.MessageShow1()">
-                            {{'button-copy'|lang:lang}}</span>
+                                {{'button-copy'|lang:lang}}</span>
                         </li>
                     </div>
                 </div>
