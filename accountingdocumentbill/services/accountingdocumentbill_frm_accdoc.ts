@@ -16,12 +16,14 @@ import { GLAccDocEntryEntity } from '../models/entities/glaccdocentryentity';
 import { CommonService } from './accdoccommonservice';
 import { ActivatedRoute } from '@angular/router';
 import { GLAccDocAssistanceComponentViewmodel } from '../viewmodels/glaccdocassistancecomponentviewmodel';
+import { LinkViewService } from './accounitngdocumentbill_frm_linkview';
 
 @Injectable()
 export class AccDocService extends ListRepositoryService {
     constructor(repository: Repository<any>,
         loadingService: FormLoadingService,
         public commonService: CommonService,
+        //public linkViewService: LinkViewService,
         public bindingData: BindingData,
         public cardDataService: CardDataService,
         public treeDataService: TreeDataService,
@@ -236,6 +238,19 @@ export class AccDocService extends ListRepositoryService {
                 history.go(-1);
                 return of(false);
             }
+            //下面是给财务session赋值操作
+            const year = this.rootUistate['funcYear'];
+            this.rootUistate['year_VO'] = year;
+            this.rootUistate['period_VO'] = filter.accPeriodID;
+            this.rootUistate['accOrg_VO'] = filter.accOrgID;
+            this.rootUistate['AccSet'].key = filter.ledgerID;
+            this.rootUistate['accSet_VO'] = filter.ledgerID;
+            this.rootUistate['year'].value = year;
+            this.rootUistate['beginDate_VO'] = filter.beginDate;
+            this.rootUistate['endDate_VO'] = filter.endDate;
+            this.rootUistate['Period'] = filter.accPeriodID;
+            this.rootUistate['PeriodBeginDate'] = filter.beginDate;
+            this.rootUistate['PeriodEndDate'] = filter.endDate;
             return this.commandService.execute('LinkViewLoad1');
         } else {
             return this.commandService.execute('GetInitData1');
@@ -325,7 +340,7 @@ export class AccDocService extends ListRepositoryService {
                 this.rootUistate['bizDate_VO'] = data.FISession_BizDate;
                 this.rootUistate['accCanlendar_VO'] = data.FISession_AccCalendarID;
                 this.rootUistate['beginDate_VO'] = data.FISession_PeriodBeginDate;
-                this.rootUistate['endDateccSet_VO'] = data.FISession_PeriodEndDate;
+                this.rootUistate['endDate_VO'] = data.FISession_PeriodEndDate;
                 this.rootUistate['Period'] = data.FISession_PeriodID;
                 this.rootUistate['PeriodBeginDate'] = data.FISession_PeriodBeginDate;
                 this.rootUistate['PeriodEndDate'] = data.FISession_PeriodEndDate;
@@ -483,20 +498,56 @@ export class AccDocService extends ListRepositoryService {
     }
     /**查看上一张凭证，供删除取消调用 */
     lookUpPreviousAccDoc(year: string, accDocID: string) {
+        const funcID = this.rootUistate['funcID'];
         let actionUriLook = `${this.baseUri}/service/`;
         const methodType = 'PUT';
         const queryParams = {};
-        actionUriLook = actionUriLook + 'GetPreviousID';
         const headers = new HttpHeaders({ 'Accept': 'application/json' });
-        const options = {
-            headers: headers,
-            body: {
-                year: year,
-                accDocID: accDocID
-            }
-        };
+        let options;
+        //根据funcid判断是联查还是制单
+        if (funcID) {
+            actionUriLook = actionUriLook + 'GetAccDocOnLinkView';
+            year = this.rootUistate['funcYear'];
+            const filter = JSON.parse(this.rootUistate['funcFilter']);
+            accDocID = this.bindingData.list.currentId;
+            options = {
+                headers: headers,
+                body: {
+                    accOrgID: filter.accOrgID,
+                    ledgerID: filter.ledgerID,
+                    accPeriodID: filter.accPeriodID,
+                    beginDate: filter.beginDate,
+                    endDate: filter.endDate,
+                    accDocTypeID: filter.accDocTypeID,
+                    beginCode: filter.beginCode,
+                    endCode: filter.endCode,
+                    queryFlag: '3',
+                    year: year,
+                    accDocID: accDocID,
+                    makerID: filter.makerID
+                }
+            };
+        } else {
+            actionUriLook = actionUriLook + 'GetPreviousID';
+            options = {
+                headers: headers,
+                body: {
+                    year: year,
+                    accDocID: accDocID
+                }
+            };
+        }
         const actionLook$ = this.befRepository.restService.request(actionUriLook, methodType, queryParams, options);
         return actionLook$;
+    }
+    //二次封装查看，区分联查和制单
+    lookAccDoc2(year: string, accDocID: string, queryFlag: string) {
+        const funcID = this.rootUistate['funcID'];
+        if (!funcID) {
+            return this.lookAccDoc(year, accDocID, queryFlag);
+        } else {
+            //return this.linkViewService.lookAccDocOnLinkView(queryFlag);
+        }
     }
     /******供外部调用的查看 */
     loadAccDoc(year: string, accDocID: string, queryFlag: string) {
@@ -514,7 +565,7 @@ export class AccDocService extends ListRepositoryService {
                     return this.catchError(res);
                 }) */.pipe(
                     switchMap(() => {
-                        return this.lookAccDoc(year, accDocID, queryFlag);
+                        return this.lookAccDoc2(year, accDocID, queryFlag);
                     }),
                     tap(() => {
                         this.loadingService.hide();
@@ -524,7 +575,7 @@ export class AccDocService extends ListRepositoryService {
                 //return this.cancelAccDoc(year, accDocID);
                 //这部分代码是不是有问题
                 this.loadingService.show();
-                return this.lookAccDoc(year, accDocID, queryFlag).pipe(
+                return this.lookAccDoc2(year, accDocID, queryFlag).pipe(
                     switchMap(() => {
                         return this.cardDataService.cancel();
                     }),
@@ -537,7 +588,7 @@ export class AccDocService extends ListRepositoryService {
             this.loadingService.show();
             return this.cardDataService.cancel().pipe(
                 switchMap(() => {
-                    return this.lookAccDoc(year, accDocID, queryFlag);
+                    return this.lookAccDoc2(year, accDocID, queryFlag);
                 }),
                 tap(() => {
                     this.loadingService.hide();
@@ -644,6 +695,9 @@ export class AccDocService extends ListRepositoryService {
                             this.befRepository.entityCollection.clear();
                             this.stateMachineService.transit('InitAction');
                             this.rootStateMachine['canAdd'] = true;
+                            //重置数量
+                            this.frameContext.appContext.getFrameContext('glaccdocentry-component').uiState['EntryAmount'] = '';
+                            this.frameContext.appContext.getFrameContext('glaccdocassistance-component').uiState['AssistanceAmount'] = '';
                             //重置合计行
                             this.frameContext.appContext.getFrameContext('glaccdocentry-component').uiState['TotalJF'] = (0).toFixed(2).toString();
                             this.frameContext.appContext.getFrameContext('glaccdocentry-component').uiState['TotalDF'] =  (0).toFixed(2).toString();
@@ -1014,19 +1068,6 @@ export class AccDocService extends ListRepositoryService {
         const accDoc = this.befRepository.entityCollection.getEntityById(accDocID) as GLAccountingDocumentEntity;
         const accDocEntrys = accDoc.glAccDocEntrys;
         this.frameContext.appContext.getFrameContext('glaccdocentry-component').uiState['EntryAmount'] = '(' + accDocEntrys.count().toString() + ')';
-    }
-
-
-    /*******更新展示组织账簿 */
-    updateInfo() {
-        /* const currentId = this.bindingData.list.currentId;
-        if (currentId) {
-            const accDocID = currentId.toString();
-            const accDoc = this.befRepository.entityCollection.getEntityById(accDocID) as GLAccountingDocumentEntity;
-            const accSet = this.rootUistate['AccSet'].value;
-            accDoc.accDwDisplay = accDoc.accOrgID.accOrgID_Name + '-' + accSet;
-            this.rootUistate['Period'] = accDoc.accPeriodID;
-        } */
     }
 
     //消息提示

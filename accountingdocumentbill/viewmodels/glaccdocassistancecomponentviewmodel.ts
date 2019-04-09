@@ -662,14 +662,6 @@ export class GLAccDocAssistanceComponentViewmodel extends ViewModel {
   public CreateAss1(): Observable<any> { return; }
 
   @NgCommand({
-    name: 'SubscribeChange1',
-    params: {
-
-    }
-  })
-  public SubscribeChange1(): Observable<any> { return; }
-
-  @NgCommand({
     name: 'GetExchangeRate1',
     params: {
 

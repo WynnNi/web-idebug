@@ -147,13 +147,5 @@ export class BasicFormViewmodel extends ViewModel {
   })
   public CancelAccDoc1(): Observable<any> { return; }
 
-  @NgCommand({
-    name: 'SubscribeChange1',
-    params: {
-
-    }
-  })
-  public SubscribeChange1(): Observable<any> { return; }
-
 }
 

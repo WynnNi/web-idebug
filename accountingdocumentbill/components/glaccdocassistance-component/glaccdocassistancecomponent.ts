@@ -14,7 +14,6 @@ import { GLAccDocAssistanceRemoveItem1Handler } from '../../viewmodels/handlers/
 import { CreateAccDocAssistant1Handler } from '../../viewmodels/handlers/createaccdocassistant1handler';
 import { DeleteAccDocAssistant1Handler } from '../../viewmodels/handlers/deleteaccdocassistant1handler';
 import { CreateAss1Handler } from '../../viewmodels/handlers/createass1handler';
-import { SubscribeChange1Handler } from '../../viewmodels/handlers/subscribechange1handler';
 import { GetExchangeRate1Handler } from '../../viewmodels/handlers/getexchangerate1handler';
 import { AccDocService as AccDocService1 } from '../../services/accountingdocumentbill_frm_accdoc';
 import { AccDocEntryService as AccDocEntryService1 } from '../../services/accountingdocumentbill_frm_accdocentry';
@@ -38,7 +37,6 @@ import { MoveDownAccDocAssistance1Handler } from '../../viewmodels/handlers/move
     { provide: COMMAND_HANDLERS_TOKEN, useClass: MoveUpAccDocAssistance1Handler, multi: true },
     { provide: COMMAND_HANDLERS_TOKEN, useClass: MoveDownAccDocAssistance1Handler, multi: true },
     { provide: COMMAND_HANDLERS_TOKEN, useClass: CreateAss1Handler, multi: true },
-    { provide: COMMAND_HANDLERS_TOKEN, useClass: SubscribeChange1Handler, multi: true },
     { provide: COMMAND_HANDLERS_TOKEN, useClass: GetExchangeRate1Handler, multi: true },
     FARRIS_DEVKIT_FRAME_PROVIDERS,
     FARRIS_COMMAND_SERVICE_PROVIDERS,
@@ -76,7 +74,6 @@ export class GLAccDocAssistanceComponent extends FrameComponent implements OnIni
   }
 
   public onFormLoad() {
-    this.viewModel.SubscribeChange1();
   }
   exchangeRateLookupPicked = () => {
     this.viewModel.GetExchangeRate1();

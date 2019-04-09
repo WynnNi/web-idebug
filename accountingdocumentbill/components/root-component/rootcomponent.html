@@ -133,28 +133,28 @@
                     [disabled]="!viewModel.stateMachine['canAddDetail']">{{'button-entry'|lang:lang}}
                     </button>
                     <div class="dropdown-menu" fDropdownMenu>
-                        <li class="dropdown-item" [class.disabled]="!viewModel.stateMachine['canAddDetail']">
-                            <span (click)="viewModel.stateMachine['canAddDetail'] ? viewModel.gLAccDocEntryComponentViewmodel.CreateAccDocEntry1() : null">
+                        <li class="dropdown-item">
+                            <span (click)="viewModel.gLAccDocEntryComponentViewmodel.CreateAccDocEntry1()">
                             {{'GLAccDocEntry-button-add'|lang:lang}}</span>
                         </li>
-                        <li class="dropdown-item" [class.disabled]="!viewModel.stateMachine['canRemoveDetail']">
-                            <span (click)="viewModel.stateMachine['canRemoveDetail'] ? viewModel.gLAccDocEntryComponentViewmodel.DeleteEntryByID1() : null">
+                        <li class="dropdown-item">
+                            <span (click)="viewModel.gLAccDocEntryComponentViewmodel.DeleteEntryByID1()">
                             {{'GLAccDocEntry-button-remove'|lang:lang}}</span>
                         </li>
-                        <li class="dropdown-item" [class.disabled]="!viewModel.stateMachine['canAddDetail']">
-                            <span (click)="viewModel.stateMachine['canAddDetail'] ? viewModel.gLAccDocEntryComponentViewmodel.MoveUpAccDocEntry1() : null">
+                        <li class="dropdown-item">
+                            <span (click)="viewModel.MessageShow1()">
                             {{'button-moveup'|lang:lang}}</span>
                         </li>
-                        <li class="dropdown-item" [class.disabled]="!viewModel.stateMachine['canAddDetail']">
-                            <span (click)="viewModel.stateMachine['canAddDetail'] ? viewModel.gLAccDocEntryComponentViewmodel.MoveDownAccDocEntry1() : null">
+                        <li class="dropdown-item">
+                            <span (click)="viewModel.MessageShow1()">
                             {{'button-movedown'|lang:lang}}</span>
                         </li>
-                        <li class="dropdown-item" [class.disabled]="!viewModel.stateMachine['canAddDetail']">
-                            <span (click)="viewModel.stateMachine['canAddDetail'] ? viewModel.gLAccDocEntryComponentViewmodel.InsertAccDocEntry1() : null">
+                        <li class="dropdown-item">
+                            <span (click)="viewModel.MessageShow1()">
                             {{'button-insert'|lang:lang}}</span>
                         </li>
-                        <li class="dropdown-item" [class.disabled]="!viewModel.stateMachine['canAddDetail']">
-                            <span (click)="viewModel.stateMachine['canAddDetail'] ? viewModel.gLAccDocEntryComponentViewmodel.CopyAccDocEntry1() : null">
+                        <li class="dropdown-item">
+                            <span (click)="viewModel.MessageShow1()">
                             {{'button-copy'|lang:lang}}</span>
                         </li>
                     </div>
@@ -174,19 +174,19 @@
                             {{'GLAccDocAssistance-button-remove'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item">
-                            <span (click)="viewModel.gLAccDocAssistanceComponentViewmodel.MoveUpAccDocAssistance1()">
+                            <span (click)="viewModel.MessageShow1()">
                             {{'button-moveup'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item">
-                            <span (click)="viewModel.gLAccDocAssistanceComponentViewmodel.MoveDownAccDocAssistance1()">
+                            <span (click)="viewModel.MessageShow1()">
                             {{'button-movedown'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item">
-                            <span (click)="viewModel.gLAccDocAssistanceComponentViewmodel.InsertAccDocAssistance1()">
+                            <span (click)="viewModel.MessageShow1()">
                             {{'button-insert'|lang:lang}}</span>
                         </li>
                         <li class="dropdown-item">
-                            <span (click)="viewModel.gLAccDocAssistanceComponentViewmodel.CopyAccDocAssistance1()">
+                            <span (click)="viewModel.MessageShow1()">
                             {{'button-copy'|lang:lang}}</span>
                         </li>
                     </div>

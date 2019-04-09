@@ -40,14 +40,6 @@ export class AddAccDoc1Handler extends CommandHandler {
     });
 
 
-    this.addTask('updateInfo', (context: CommandContext) => {
-      const args = [
-        ''
-      ];
-      return this.invoke(this._AccDocService1, 'updateInfo', args, context);
-    });
-
-
     this.addTask('entryAmount', (context: CommandContext) => {
       const args = [
         ''
@@ -73,8 +65,7 @@ export class AddAccDoc1Handler extends CommandHandler {
     });
 
     this.addLink('createByAccDocType', 'transit', `1==1`);
-    this.addLink('transit', 'updateInfo', `1==1`);
-    this.addLink('updateInfo', 'entryAmount', `1==1`);
+    this.addLink('transit', 'entryAmount', `1==1`);
     this.addLink('entryAmount', 'assistanceAmount', `1==1`);
     this.addLink('assistanceAmount', 'createFISession', `1==1`);
   }

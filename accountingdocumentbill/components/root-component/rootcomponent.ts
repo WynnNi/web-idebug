@@ -39,10 +39,6 @@ import { ApproveAccDoc1Handler } from '../../viewmodels/handlers/approveaccdoc1h
 import { CancelApproveAccDoc1Handler } from '../../viewmodels/handlers/cancelapproveaccdoc1handler';
 import { SignatureAccDoc1Handler } from '../../viewmodels/handlers/signatureaccdoc1handler';
 import { CancelSignatureAccDoc1Handler } from '../../viewmodels/handlers/cancelsignature1handler';
-import { ChangeAccDocOnLinkView3Handler } from '../../viewmodels/handlers/changeaccdoconlinkview3handler';
-import { ChangeAccDocOnLinkView4Handler } from '../../viewmodels/handlers/ChangeAccDocOnLinkView4Handler';
-import { ChangeAccDocOnLinkView1Handler } from '../../viewmodels/handlers/changeaccdoconlinkview1handler';
-import { ChangeAccDocOnLinkView2Handler } from '../../viewmodels/handlers/changeaccdoconlinkview2handler';
 
 @Component({
   selector: 'app-rootcomponent',
@@ -65,10 +61,6 @@ import { ChangeAccDocOnLinkView2Handler } from '../../viewmodels/handlers/change
     { provide: COMMAND_HANDLERS_TOKEN, useClass: CopyThisAccDoc1Handler, multi: true },
 
     { provide: COMMAND_HANDLERS_TOKEN, useClass: LinkViewLoad1Handler, multi: true },
-    { provide: COMMAND_HANDLERS_TOKEN, useClass: ChangeAccDocOnLinkView1Handler, multi: true },
-    { provide: COMMAND_HANDLERS_TOKEN, useClass: ChangeAccDocOnLinkView2Handler, multi: true },
-    { provide: COMMAND_HANDLERS_TOKEN, useClass: ChangeAccDocOnLinkView3Handler, multi: true },
-    { provide: COMMAND_HANDLERS_TOKEN, useClass: ChangeAccDocOnLinkView4Handler, multi: true },
     { provide: COMMAND_HANDLERS_TOKEN, useClass: CheckAccDoc1Handler, multi: true },
     { provide: COMMAND_HANDLERS_TOKEN, useClass: CancelCheckAccDoc1Handler, multi: true },
     { provide: COMMAND_HANDLERS_TOKEN, useClass: AccountAccDoc1Handler, multi: true },

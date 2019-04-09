@@ -20,7 +20,6 @@ import { SaveAccDoc1Handler } from '../../viewmodels/handlers/saveaccdoc1handler
 import { AddAccDoc1Handler } from '../../viewmodels/handlers/addaccdoc1handler';
 import { LookUp1Handler } from '../../viewmodels/handlers/lookup1handler';
 import { CancelAccDoc1Handler } from '../../viewmodels/handlers/cancelaccdoc1handler';
-import { SubscribeChange1Handler } from '../../viewmodels/handlers/subscribechange1handler';
 import { AccDocService as AccDocService1 } from '../../services/accountingdocumentbill_frm_accdoc';
 import { AccDocEntryService as AccDocEntryService1 } from '../../services/accountingdocumentbill_frm_accdocentry';
 import { CommonService } from '../../services/accdoccommonservice';
@@ -40,7 +39,6 @@ import { CommonService } from '../../services/accdoccommonservice';
     { provide: COMMAND_HANDLERS_TOKEN, useClass: AddAccDoc1Handler, multi: true },
     { provide: COMMAND_HANDLERS_TOKEN, useClass: LookUp1Handler, multi: true },
     { provide: COMMAND_HANDLERS_TOKEN, useClass: CancelAccDoc1Handler, multi: true },
-    { provide: COMMAND_HANDLERS_TOKEN, useClass: SubscribeChange1Handler, multi: true },
     FARRIS_DEVKIT_FRAME_PROVIDERS,
     FARRIS_COMMAND_SERVICE_PROVIDERS,
     { provide: FRAME_ID, useValue: 'basic-form-component' },
@@ -76,7 +74,6 @@ export class BasicFormComponent extends FrameComponent implements OnInit, AfterV
   }
 
   public onFormLoad() {
-    this.viewModel.SubscribeChange1();
   }
 
 

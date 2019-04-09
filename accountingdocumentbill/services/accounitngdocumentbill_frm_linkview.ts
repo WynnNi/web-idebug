@@ -54,6 +54,9 @@ export class LinkViewService extends ListRepositoryService {
                 return of(true);
             }),
             switchMap(() => {
+                return this.accDocService.getNowDataName();
+            }),
+            switchMap(() => {
                 this.accDocService.entryAmount();
                 return of(true);
             }),
@@ -217,7 +220,7 @@ export class LinkViewService extends ListRepositoryService {
     }
 
 
-    //查看上一张、下一张、第一张、最后一张凭证
+    //查看上一张(3)、下一张(2)、第一张(1)、最后一张凭证(4)
     lookAccDocOnLinkView(queryFlag: string) {
         const actionUriLook = `${this.baseUri}/service/GetAccDocOnLinkView`;
         const methodType = 'PUT';

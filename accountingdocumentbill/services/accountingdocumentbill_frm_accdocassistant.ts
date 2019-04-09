@@ -189,9 +189,12 @@ export class AccDocAssistanceService extends ListRepositoryService {
         return actionCreate$.catch((res: any) => {
             return this.commonService.catchError(res);
         }).pipe(
-            switchMap(() => {
-                return  this.cardDataService.update();
-            }),
+            map((data: any) => {
+                const returnValue = data['returnValue'];
+                const entity = EntityFactory<GLAccDocAssistanceEntity>(GLAccDocAssistanceEntity, returnValue);
+                accDocEntry.glAccDocAssistances.appendNew(entity);
+                return entity;
+            })
         );
 
     }
@@ -346,11 +349,36 @@ export class AccDocAssistanceService extends ListRepositoryService {
         const accDoc = this.repository.entityCollection.getEntityById(accDocID) as GLAccountingDocumentEntity;
         const accDocEntry = accDoc.glAccDocEntrys.get(entryID) as GLAccDocEntryEntity;
         const accDocAssistances = accDocEntry.glAccDocAssistances;
+        const accDocAssList = [];
         for (let i = 0; i < accDocAssistances.count(); i++) {
             const accDocAss = accDocAssistances[i] as GLAccDocAssistanceEntity;
             accDocEntry.glAccDocAssistances.remove(accDocAss.id);
+            accDocAssList.push(accDocAss.id);
         }
-        return of(true);
+        this.loadingService.show();
+        const actionUriDelete = `${this.baseUri}/service/Cmp4DeleteAccDocAss`;
+        const methodType = 'PUT';
+        const queryParams = {};
+        const options = {
+            body: {
+                year: this.rootUistate['year'].value,
+                accDocID: accDocID,
+                entryID: entryID,
+                assIDs: accDocAssList,
+                RequestInfo: (this.befRepository).restService.buildRequestInfo()
+            }
+        };
+        const actionDelete$ = this.befRepository.restService.request(actionUriDelete, methodType, queryParams, options);
+        return actionDelete$.catch((res: any) => {
+            return this.commonService.catchError(res);
+        }).pipe(
+            switchMap(() => {
+                return this.cardDataService.update();
+            }),
+            tap(() => {
+                this.loadingService.hide();
+            })
+        );
     }
 
     //展示辅助列（切换分录）
