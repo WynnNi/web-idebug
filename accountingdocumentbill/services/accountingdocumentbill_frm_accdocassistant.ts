@@ -13,6 +13,7 @@ import { GLAccDocAssistanceComponentViewmodel } from '../viewmodels/glaccdocassi
 import { of } from 'rxjs/observable/of';
 import { HttpHeaders } from '@angular/common/http';
 import { CommonService } from './commonservice';
+import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
 
 @Injectable()
 export class AccDocAssistanceService extends ListRepositoryService {
@@ -172,7 +173,7 @@ export class AccDocAssistanceService extends ListRepositoryService {
         }
     }
 
-    //新增辅助--内部调用及新增按钮的调用
+    //新增辅助--内部调用
     createAss(year: string, accDocID: string, accDocEntryID: string) {
         const actionUriCreate = `${this.baseUri}/service/CreateAccDocAssistance`;
         const methodType = 'PUT';
@@ -489,9 +490,16 @@ export class AccDocAssistanceService extends ListRepositoryService {
         };
         const actionExchangeRate$ = this.befRepository.restService.request(actionUriExchangeRate, methodType, queryParams, options);
         return actionExchangeRate$.catch((res: any) => {
+            //选择币种后报错,清空币种和汇率
+            setTimeout(() => {
+                this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'foreignCurrencyID', 'foreignCurrencyID'], null, true);
+                this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'foreignCurrencyID', 'foreignCurrencyID_Code', 'dfCode'], null, true);
+                this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'foreignCurrencyID', 'foreignCurrencyID_Name', 'dfName'], null, true);
+                this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'exchangeRate'], 0, true);
+            }, 0);
             return this.commonService.catchError(res);
         }).pipe(
-            map((data: any) => {
+            switchMap((data: any) => {
                 const exchangeRate = data.returnValue;
                 accDocAssistance.exchangeRate = Number(exchangeRate);
                 return of(true);

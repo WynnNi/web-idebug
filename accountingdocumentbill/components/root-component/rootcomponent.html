@@ -77,8 +77,7 @@
                     [disabled]="!viewModel.stateMachine['canLook']">
                     {{'button-next'|lang:lang}}
                 </button>
-                <button class="btn btn-secondary f-btn-ml" id="button-lookup" (click)="LookUp()"
-                    [disabled]="!!viewModel.uiState['funcID']">
+                <button class="btn btn-secondary f-btn-ml" id="button-lookup" (click)="LookUp()">
                     {{'button-lookup'|lang:lang}}
                 </button>
                 <!-- 业务处理：作废凭证、取消作废、复制凭证、复制本凭证-->

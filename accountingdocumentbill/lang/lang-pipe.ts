@@ -91,36 +91,39 @@ export const lang = {
 		"gridField_bizDateDis": "业务日期",
 		"button-entry": "分录",
 		"button-assistance": "辅助",
-    "button-business": "业务处理",
-    "button-obsolete":"作废凭证",
-    "button-cancelobsolete":"取消作废",
-    "button-copyaccdoc":"复制凭证",
+		"button-business": "业务处理",
+		"button-obsolete": "作废凭证",
+		"button-cancelobsolete": "取消作废",
+		"button-copyaccdoc": "复制凭证",
 		"button-copythisaccdoc": "复制本凭证",
 		"button-copy": "复制",
 		"button-insert": "插入",
 		"button-moveup": "上移",
-    "button-movedown": "下移",
-    "button-account":"记账",
-    "button-cancelaccount":"取消记账",
-    "button-check":"审核",
-    "button-cancelcheck":"取消审核",
-    "button-approve":"批准",
-    "button-cancelapprove":"取消批准",
-    "button-signature":"签字",
-		"button-cancelsignature":"取消签字",
-		"isAudit":"已审核",
-		"isBook":"已记账"
+		"button-movedown": "下移",
+		"button-account": "记账",
+		"button-cancelaccount": "取消记账",
+		"button-check": "审核",
+		"button-cancelcheck": "取消审核",
+		"button-approve": "批准",
+		"button-cancelapprove": "取消批准",
+		"button-signature": "签字",
+		"button-cancelsignature": "取消签字",
+		"isAudit": "已审核",
+		"isBook": "已记账",
+		"isCashier":"已签字",
+		"isVoid":"已作废",
+		"noPassAudit":"审核不通过"
 	},
 	"en": {}
 };
 
-@Pipe({name: 'lang'})
+@Pipe({ name: 'lang' })
 export class LangPipe implements PipeTransform {
-  transform(key: string, langCode: string) {
-    if (langCode && lang[langCode] && lang[langCode][key]) {
-      return lang[langCode][key];
-    } else {
-      return lang['ch'][key];
-    }
-  }
+	transform(key: string, langCode: string) {
+		if (langCode && lang[langCode] && lang[langCode][key]) {
+			return lang[langCode][key];
+		} else {
+			return lang['ch'][key];
+		}
+	}
 }

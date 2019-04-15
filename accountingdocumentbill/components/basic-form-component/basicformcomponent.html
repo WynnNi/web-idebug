@@ -41,12 +41,21 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-12 col-md-2 col-lg-2 col-xl-2 text-right">
+        <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right">
             <label class="h3 text-danger text-center" style="border:1px solid #F00;width:100px" [ngClass]="{'d-none': !viewModel.bindingData.isAudit || !!viewModel.bindingData.isBook}"><span >
                 {{'isAudit'|lang:lang}} 
             </span></label>
-            <label class="h3 text-danger" [ngClass]="{'d-none': !viewModel.bindingData.isBook}"><span style="border:2px solid #F00">
-                 {{'isAudit'|lang:lang}} 
+            <label class="h3 text-danger text-center" style="border:1px solid #F00;width:100px" [ngClass]="{'d-none': !viewModel.bindingData.cashierID || !!viewModel.bindingData.isAudit}"><span >
+                {{'isCashier'|lang:lang}} 
+            </span></label>
+            <label class="h3 text-danger text-center" style="border:1px solid #F00;width:100px" [ngClass]="{'d-none': !viewModel.bindingData.isBook}"><span>
+                 {{'isBook'|lang:lang}} 
+            </span></label>
+            <label class="h3 text-danger text-center" style="border:1px solid #F00;width:100px" [ngClass]="{'d-none': !viewModel.bindingData.isVoid}"><span>
+                 {{'isVoid'|lang:lang}} 
+            </span></label>
+            <label class="h3 text-danger text-center" style="border:1px solid #F00;width:150px" [ngClass]="{'d-none': !viewModel.bindingData.reasonForNAudit}"><span>
+                 {{'noPassAudit'|lang:lang}} 
             </span></label>
         </div>
     </div>

@@ -27,8 +27,7 @@ export class AccDocCommonService extends ListRepositoryService {
         public formNotifyService: FormNotifyService,
         public bindingDataService: BindingDataService,
         public stateMachineService: StateMachineService,
-        public formMessageService: MessagerService)
-        {
+        public formMessageService: MessagerService) {
         super(repository, loadingService);
     }
     //公共变量
@@ -114,17 +113,15 @@ export class AccDocCommonService extends ListRepositoryService {
         const quantityTo2 = Number(quantity.toFixed(2));
         //汇率不为0，计算外币
         if (exchangeRateTo8 - 0 !== 0) {
-            const a2 = Number((exchangeRateTo8 * foreignCurrencyTo4).toFixed(2));
-            if (a2 - amountTo2 !== 0) {
-                const f4= Number((amountTo2 / exchangeRateTo8).toFixed(4));
+            const f4 = Number((amountTo2 / exchangeRateTo8).toFixed(4));
+            if (f4 - foreignCurrencyTo4 !== 0) {
                 setTimeout(() => {
                     this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'foreignCurrency'], f4, true, true);
                 }, 0);
             }
         } else if (foreignCurrencyTo4 - 0 !== 0) {//汇率为0，外币不为0，计算汇率
-            const a2 = Number((exchangeRateTo8 * foreignCurrencyTo4).toFixed(2));
-            if (a2 - amountTo2 !== 0) {
-                const e8 = Number((amountTo2 / foreignCurrencyTo4).toFixed(8));
+            const e8 = Number((amountTo2 / foreignCurrencyTo4).toFixed(8));
+            if (e8 - exchangeRateTo8 !== 0) {
                 setTimeout(() => {
                     this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'exchangeRate'], e8, true, true);
                 }, 0);
@@ -133,17 +130,15 @@ export class AccDocCommonService extends ListRepositoryService {
 
         //数量不为0，计算单价
         if (quantityTo2 - 0 !== 0) {
-            const a2 = Number((quantityTo2 * unitPriceTo2).toFixed(2));
-            if (a2 - amountTo2 !== 0) {
-                const u2 = Number((amountTo2 / quantityTo2).toFixed(2));
+            const u2 = Number((amountTo2 / quantityTo2).toFixed(2));
+            if (u2 - unitPriceTo2 !== 0) {
                 setTimeout(() => {
                     this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'unitPrice'], u2, true, true);
                 }, 0);
             }
         } else if (unitPriceTo2 - 0 !== 0) {//数量为0，单价不为0，计算数量
-            const a2 = Number((quantityTo2 * unitPriceTo2).toFixed(2));
-            if (a2 - amountTo2 !== 0) {
-                const q2 = Number((amountTo2 / unitPriceTo2).toFixed(2));
+            const q2 = Number((amountTo2 / unitPriceTo2).toFixed(2));
+            if (q2 - quantityTo2 !== 0) {
                 setTimeout(() => {
                     this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'quantity'], q2, true, true);
                 }, 0);

@@ -211,19 +211,17 @@ export class AccDocService extends ListRepositoryService {
                     }, 0);
                     //辅助金额发生变化，计算外币或单价，并合计分录金额(汇率为0不计算外币，数量为0不计算单价)
                 } else if (path[0] === 'glAccDocEntrys' && path[1] === 'glAccDocAssistances' && path[2] === 'amount') {
-                    //const exchangeRate = this.bindingData.getValue(['glAccDocEntrys', 'glAccDocAssistances', 'exchangeRate']);
-                    //const quantity = this.bindingData.getValue(['glAccDocEntrys', 'glAccDocAssistances', 'quantity']);
                     //值为null赋值0
                     if (change.value === null) {
                         setTimeout(() => {
                             this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'amount'], 0, true, true);
                         }, 0);
                     }
-                    /* if (exchangeRate - 0 !== 0 || quantity - 0 !== 0) {
-                        this.assistanceAmount();
-                    } */
                     //在下面方法进行控制
                     this.accDocCommonService.assistanceAmount();
+                    return this.accDocCommonService.totalAssistance();
+                    //记账方向发生改变，重新合计辅助金额到分录
+                } else if (path[0] === 'glAccDocEntrys' && path[1] === 'lendingDirection') {
                     return this.accDocCommonService.totalAssistance();
                 }
             }
@@ -253,17 +251,19 @@ export class AccDocService extends ListRepositoryService {
             this.rootUistate['AccSet'].key = filter.ledgerID;
             this.rootUistate['accSet_VO'] = filter.ledgerID;
             this.rootUistate['year'].value = year;
-            const beginDate = filter.beginDate;
-            const dateYear = Number( beginDate.substring(0, 4));
-            const dateMonth = Number( beginDate.substring(0, 4));
-            const dateDay = Number( beginDate.substring(0, 4));
-            this.rootUistate['AccDocDate'] = new Date(dateYear, dateMonth, dateDay);
+            const beginDate = filter.beginDate as string;
+            const dateYear = Number( beginDate.substr(0, 4));
+            const dateMonth = Number( beginDate.substr(4, 2));
+            const dateDay = Number( beginDate.substr(6, 2));
+            this.rootUistate['AccDocDate'] = new Date(dateYear, dateMonth - 1, dateDay);
             return this.createFISession().pipe(
                 switchMap(() => {
-                    //TODO：这里有问题，应该建一个联查的起始日期终止日期的VO变量
-                    this.rootUistate['beginDate_VO'] = filter.beginDate;
-                    this.rootUistate['endDate_VO'] = filter.endDate;
-                    this.commandService.execute('LinkViewLoad;1');
+                    //联查的起始日期、终止日期、制单人赋值
+                    this.rootUistate['beginDateLV_VO'] = filter.beginDate;
+                    this.rootUistate['endDateLV_VO'] = filter.endDate;
+                    this.rootUistate['makerID_VO'] = filter.makerID;
+                    this.rootUistate['accDocType_VO'] = filter.accDocTypeID;
+                    this.commandService.execute('LinkViewLoad1');
                     return of(true);
                 })
             );
@@ -920,6 +920,16 @@ export class AccDocService extends ListRepositoryService {
                 return this.accDocCommonService.total('');
             } ),
         );
+    }
+
+
+    //值为null，返回0计算
+    nullTo0(value: any) {
+        if (value === null) {
+            return 0;
+        } else {
+            return value;
+        }
     }
 
 }

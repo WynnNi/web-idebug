@@ -84,6 +84,16 @@ export class GLAccountingDocumentRepository extends BefRepository<GLAccountingDo
   })
   public endCode_VO: String;
 
+  @NgVariable({
+      mapping: 'beginDateLV_VO'
+  })
+  public beginDateLV_VO: String;
+
+  @NgVariable({
+      mapping: 'endDateLV_VO'
+  })
+  public endDateLV_VO: String;
+
   constructor(injector: Injector) {
     super(injector);
   }
