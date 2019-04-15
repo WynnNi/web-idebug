@@ -107,7 +107,9 @@ export const lang = {
     "button-approve":"批准",
     "button-cancelapprove":"取消批准",
     "button-signature":"签字",
-    "button-cancelsignature":"取消签字"
+		"button-cancelsignature":"取消签字",
+		"isAudit":"已审核",
+		"isBook":"已记账"
 	},
 	"en": {}
 };

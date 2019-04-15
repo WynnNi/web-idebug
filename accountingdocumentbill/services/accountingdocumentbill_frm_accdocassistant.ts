@@ -49,9 +49,12 @@ export class AccDocAssistanceService extends ListRepositoryService {
         //辅助的视图模型的dom
         const glAssistanceViewModel = this.frameContext.appContext.getFrameContext('glaccdocassistance-component').viewModel as GLAccDocAssistanceComponentViewmodel;
         const fields = glAssistanceViewModel.dom.dataGrid_GLAccDocAssistance.fields;
-        for (let i = 0; i < fields.length; i++) {
-            fields[i].visible = false;
-        }
+        fields.forEach(field => {
+            field.visible = false;
+            field.require = false;
+            field.readonly = false;
+            field.editor.readonly = false;
+        });
         const actionUriDisplay = `${this.baseUri}/service/Mgrcmp4GetAccTitleDisPlayCol`;
         const optionsDisplay = {
             body: {
@@ -75,19 +78,27 @@ export class AccDocAssistanceService extends ListRepositoryService {
             }).pipe(
                 switchMap((data: any) => {
                     if (data.existsAss) {
+                        //存在辅助项，根据返回信息进行动态展示
+                        //辅助列的信息，包括：标题、是否必填、顺序号、字段编号、字段类型。币种列还放着单一币种信息
                         const assColumnInfoList = data.assColumnInfoList;
-                        for (let i = 0; i < fields.length; i++) {
-                            const bingdingID = fields[i].id.split('_');
+                        fields.forEach(field => {
+                            const bingdingID = field.id.split('_'); //辅助列视图模型ID
                             for (let j = 0; j < assColumnInfoList.length; j++) {
                                 const dataProp = assColumnInfoList[j].refColCode as string;
+                                //列ID取字段编号部分
                                 const prop = dataProp.slice(0, 1).toLowerCase() + dataProp.substring(1, dataProp.length);
+                                //字段编号与列ID匹配，显示该列
                                 if (bingdingID[1] === prop) {
-                                    fields[i].visible = true; //动态显示列
+                                    field.visible = true;
+                                    //设置必填列
+                                    if (assColumnInfoList[j].isNotNull === true) {
+                                        field.require = true;
+                                    }
                                     if (prop === 'foreignCurrencyID') {
                                         //币种列是否可以编辑，单一外币不可编辑
                                         if (assColumnInfoList[j].other) {
-                                            fields[i].readonly = true;
-                                            fields[i].editor.readonly = true;
+                                            field.readonly = true;
+                                            field.editor.readonly = true;
                                             const other = assColumnInfoList[j].other.split(',');
                                             //币种关联属性
                                             currencyShow = {
@@ -101,21 +112,22 @@ export class AccDocAssistanceService extends ListRepositoryService {
                                                 }
                                             };
                                         } else {
-                                            fields[i].readonly = false;
-                                            fields[i].editor.readonly = false;
+                                            field.readonly = false;
+                                            field.editor.readonly = false;
                                         }
                                     } else if (prop === 'exchangeRate') {
+                                        field.readonly = true;
+                                        field.editor.readonly = true;
                                         //汇率不可编辑
                                         if (assColumnInfoList[j].other) {
-                                            fields[i].readonly = true;
-                                            fields[i].editor.readonly = true;
                                             //汇率值
                                             exchangeRate = Number(assColumnInfoList[j].other);
                                         }
                                     }
                                 }
                             }
-                        }
+                        });
+                        //辅助核算时新增按钮可以点击
                         this.frameContext.appContext.getFrameContext('glaccdocassistance-component').uiState['CanAdd'] = true;
                         return this.createAss(year, accDocID, accDocEntryID).pipe(
                             switchMap(() => {
@@ -384,9 +396,12 @@ export class AccDocAssistanceService extends ListRepositoryService {
         //先把所有列隐藏
         const glAssistanceViewModel = this.frameContext.appContext.getFrameContext('glaccdocassistance-component').viewModel as GLAccDocAssistanceComponentViewmodel;
         const fields = glAssistanceViewModel.dom.dataGrid_GLAccDocAssistance.fields;
-        for (let i = 0; i < fields.length; i++) {
-            fields[i].visible = false;
-        }
+        fields.forEach(field => {
+            field.visible = false;
+            field.require = false;
+            field.readonly = false;
+            field.editor.readonly = false;
+        });
         const actionUriDisplay = `${this.baseUri}/service/Mgrcmp4GetAccTitleDisPlayCol`;
         const methodType = 'PUT';
         const queryParams = {};
@@ -404,28 +419,38 @@ export class AccDocAssistanceService extends ListRepositoryService {
                 return this.commonService.catchError(res);
             }).pipe(
                 map((data: any) => {
+                    //存在辅助核算
                     if (data.existsAss) {
                         const assColumnInfoList = data.assColumnInfoList;
-                        for (let i = 0; i < fields.length; i++) {
-                            const bingdingID = fields[i].id.split('_');
+                        fields.forEach(field => {
+                            const bingdingID = field.id.split('_');
                             for (let j = 0; j < assColumnInfoList.length; j++) {
                                 const dataProp = assColumnInfoList[j].refColCode as string;
                                 const prop = dataProp.slice(0, 1).toLowerCase() + dataProp.substring(1, dataProp.length);
                                 if (bingdingID[1] === prop) {
-                                    fields[i].visible = true;
+                                    field.visible = true;
+                                    //设置必填
+                                    if (assColumnInfoList[j].isNotNull === true) {
+                                        field.require = true;
+                                    }
                                     if (prop === 'foreignCurrencyID') {
                                         //币种列是否可以编辑，单一外币不可编辑
                                         if (assColumnInfoList[j].other) {
-                                            fields[i].readonly = true;
-                                            fields[i].editor.readonly = true;
+                                            field.readonly = true;
+                                            field.editor.readonly = true;
                                         } else {
-                                            fields[i].readonly = false;
-                                            fields[i].editor.readonly = false;
+                                            field.readonly = false;
+                                            field.editor.readonly = false;
                                         }
+                                    } else if (prop === 'exchangeRate') {
+                                        //汇率不可编辑
+                                        field.readonly = true;
+                                        field.editor.readonly = true;
                                     }
                                 }
                             }
-                        }
+                        });
+                        //存在辅助核算，辅助按钮可以点击
                         this.frameContext.appContext.getFrameContext('glaccdocassistance-component').uiState['CanAdd'] = true;
                         return of(true);
                     } else {

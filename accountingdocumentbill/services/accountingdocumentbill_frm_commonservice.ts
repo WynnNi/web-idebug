@@ -116,17 +116,17 @@ export class AccDocCommonService extends ListRepositoryService {
         if (exchangeRateTo8 - 0 !== 0) {
             const a2 = Number((exchangeRateTo8 * foreignCurrencyTo4).toFixed(2));
             if (a2 - amountTo2 !== 0) {
-                const f8 = Number((amountTo2 / exchangeRateTo8).toFixed(8));
+                const f4= Number((amountTo2 / exchangeRateTo8).toFixed(4));
                 setTimeout(() => {
-                    this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'foreignCurrency'], f8, true, true);
+                    this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'foreignCurrency'], f4, true, true);
                 }, 0);
             }
         } else if (foreignCurrencyTo4 - 0 !== 0) {//汇率为0，外币不为0，计算汇率
             const a2 = Number((exchangeRateTo8 * foreignCurrencyTo4).toFixed(2));
             if (a2 - amountTo2 !== 0) {
-                const e4 = Number((amountTo2 / foreignCurrencyTo4).toFixed(4));
+                const e8 = Number((amountTo2 / foreignCurrencyTo4).toFixed(8));
                 setTimeout(() => {
-                    this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'exchangeRate'], e4, true, true);
+                    this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'exchangeRate'], e8, true, true);
                 }, 0);
             }
         }//汇率、外币都为0就不管了
@@ -189,12 +189,14 @@ export class AccDocCommonService extends ListRepositoryService {
             accDocID = this.bindingData.list.currentId.toString();
         }
         const accDoc = this.befRepository.entityCollection.getEntityById(accDocID) as GLAccountingDocumentEntity;
+        //不用了，这个UIState也不再使用
         //已记账审核不可编辑、删除
-        if (!!accDoc.isBook || !!accDoc.isAudit) {
+        /* if (!!accDoc.isBook || !!accDoc.isAudit) {
             this.rootUistate['CantEdit'] = true;
         } else {
             this.rootUistate['CantEdit'] = false;
-        }
+        } */
+
         //由辅助合计分录
         const accDocEntrys = accDoc.glAccDocEntrys;
         let sumJF = 0;

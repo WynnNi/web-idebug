@@ -3,8 +3,9 @@ import { UIState, NgParam } from '@farris/devkit';
 
 @Injectable()
 export class RootViewmodelUIState extends UIState {
-  @NgParam()
-  public CantEdit: boolean = false;
+  //这个地方不用了，能不能编辑由后端返回，给出提示
+  /* @NgParam()
+  public CantEdit: boolean = false; */
 
   @NgParam()
   public AccDocID: any = {};
@@ -70,9 +71,21 @@ export class RootViewmodelUIState extends UIState {
   public accCanlendar_VO: string = '';
 
   @NgParam()
-  public begainDate_VO: string = '';
+  public beginDate_VO: string = '';
 
   @NgParam()
   public endDate_VO: string = '';
+
+  @NgParam()
+  public accDocType_VO:string='';
+
+  @NgParam()
+  public makeID_VO:string='';
+
+  @NgParam()
+  public beginCode_VO:string='';
+
+  @NgParam()
+  public endCode_VO:string='';
 
 }

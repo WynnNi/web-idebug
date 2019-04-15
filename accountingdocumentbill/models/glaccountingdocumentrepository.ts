@@ -55,14 +55,34 @@ export class GLAccountingDocumentRepository extends BefRepository<GLAccountingDo
   public accCanlendar_VO: String;
 
   @NgVariable({
-      mapping: 'begainDate_VO'
+      mapping: 'beginDate_VO'
   })
-  public begainDate_VO: String;
+  public beginDate_VO: String;
 
   @NgVariable({
       mapping: 'endDate_VO'
   })
   public endDate_VO: String;
+
+  @NgVariable({
+      mapping: 'accDocType_VO'
+  })
+  public accDocType_VO: String;
+
+  @NgVariable({
+      mapping: 'makeID_VO'
+  })
+  public makeID_VO: String;
+
+  @NgVariable({
+      mapping: 'beginCode_VO'
+  })
+  public beginCode_VO: String;
+
+  @NgVariable({
+      mapping: 'endCode_VO'
+  })
+  public endCode_VO: String;
 
   constructor(injector: Injector) {
     super(injector);

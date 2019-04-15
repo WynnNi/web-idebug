@@ -18,6 +18,8 @@ import { ActivatedRoute } from '@angular/router';
 import { GLAccDocAssistanceComponentViewmodel } from '../viewmodels/glaccdocassistancecomponentviewmodel';
 import { LinkViewService } from './accounitngdocumentbill_frm_linkview';
 import { AccDocCommonService } from './accountingdocumentbill_frm_commonservice';
+import { GLAccDocAssistanceEntity } from '../models/entities/glaccdocassistanceentity';
+import { BasicFormViewmodel } from '../viewmodels/basicformviewmodel';
 
 @Injectable()
 export class AccDocService extends ListRepositoryService {
@@ -68,13 +70,16 @@ export class AccDocService extends ListRepositoryService {
 
     //监听凭证头基本信息和借贷方金额的值变化事件
     amountChange() {
+        //ToDo:金额输负值的时候，我监听到的值为null，计算会出错！！
+
         //辅助的视图模型的dom
         const glAssistanceViewModel = this.frameContext.appContext.getFrameContext('glaccdocassistance-component').viewModel as GLAccDocAssistanceComponentViewmodel;
         const fields = glAssistanceViewModel.dom.dataGrid_GLAccDocAssistance.fields;
         this.bindingData.changes.subscribe((change: Change) => {
             const path = change.path;
-            //console.log(path);
+            //只监听新增和编辑，？？？？需要监听新增吗？？？
             if (change.type === ChangeType.Append || change.type === ChangeType.ValueChanged) {
+                //附件张数和通知单张数控制在0和9999之间
                 if (path[0] === 'numberOfAttch') {
                     if (change.value < 0 || change.value === null) {
                         setTimeout(() => {
@@ -94,7 +99,7 @@ export class AccDocService extends ListRepositoryService {
                         setTimeout(() => {
                             this.bindingData.setValue(['numberOfNote'], 9999, true, true);
                         }, 0);
-                    }
+                    }//凭证日期限制在期间起始日期和终止日期之间
                 } else if (path[0] === 'accDocDateDisplay') {
                     const date = this.commonService.dateTo8(change.value);
                     const beginDate = this.rootUistate['year'].value + this.rootUistate['beginDate_VO'];
@@ -129,9 +134,12 @@ export class AccDocService extends ListRepositoryService {
                     const accDocEntrys = accDoc.glAccDocEntrys;
                     const accDocEntry = accDocEntrys.get(accDocEntryID) as GLAccDocEntryEntity;
                     if (accDocEntry.glAccDocAssistances.count() === 1 && change.value - 0 !== 0) {
-                        setTimeout(() => {
-                            this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'amount'], change.value, true, true);
-                        }, 0);
+                        const accDocAssistance = accDocEntry.glAccDocAssistances[0] as GLAccDocAssistanceEntity;
+                        if (accDocAssistance.amount - change.value !== 0) {
+                            setTimeout(() => {
+                                this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'amount'], change.value, true, true);
+                            }, 0);
+                        }
                     }
                     return this.accDocCommonService.total('');
                     //外币变化，计算辅助金额，并合计分录金额
@@ -149,7 +157,7 @@ export class AccDocService extends ListRepositoryService {
                         }, 0);
                     }
                     const exchangeRate = this.bindingData.getValue(['glAccDocEntrys', 'glAccDocAssistances', 'exchangeRate']);
-                    const amountTo2 = Number(change.value * exchangeRate).toFixed(2);
+                    const amountTo2 = Number((change.value * exchangeRate).toFixed(2));
                     setTimeout(() => {
                         this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'amount'], amountTo2, true, true);
                     }, 0);
@@ -226,30 +234,41 @@ export class AccDocService extends ListRepositoryService {
         this.befRepository['variableManager']['innerValueMap'].clear();
         this.amountChange();
         const funcID = this.rootUistate['funcID'];
-        if (funcID) {
+        if (!!funcID) {
             const accDocID = this.rootUistate['funcAccDocID'];
-            const filter = this.rootUistate['filter'];
-            if (funcID !== 'CheckAccountingDocument' || funcID !== 'ChargeAccountingDocument' || funcID !== 'ApprovedAccountingDocument' || funcID !== 'SignedAccountingDocument') {
+            const filter = JSON.parse(this.rootUistate['funcFilter']) ;
+            if (funcID !== 'CheckAccountingDocument' && funcID !== 'ChargeAccountingDocument' && funcID !== 'ApprovedAccountingDocument' && funcID !== 'SignedAccountingDocument') {
                 this.formMessageService.warning('非法跳转！');
-                history.go(-1);
+                history.back();
                 return of(false);
             }
             if (!accDocID || !filter) {
                 this.formMessageService.warning('参数传递错误！');
-                history.go(-1);
+                history.back();
                 return of(false);
             }
             //下面是给财务session赋值操作
             const year = this.rootUistate['funcYear'];
             this.rootUistate['year_VO'] = year;
-            this.rootUistate['period_VO'] = filter.accPeriodID;
-            this.rootUistate['accOrg_VO'] = filter.accOrgID;
             this.rootUistate['AccSet'].key = filter.ledgerID;
             this.rootUistate['accSet_VO'] = filter.ledgerID;
             this.rootUistate['year'].value = year;
-            this.rootUistate['beginDate_VO'] = filter.beginDate;
-            this.rootUistate['endDate_VO'] = filter.endDate;
-            return this.commandService.execute('LinkViewLoad1');
+            const beginDate = filter.beginDate;
+            const dateYear = Number( beginDate.substring(0, 4));
+            const dateMonth = Number( beginDate.substring(0, 4));
+            const dateDay = Number( beginDate.substring(0, 4));
+            this.rootUistate['AccDocDate'] = new Date(dateYear, dateMonth, dateDay);
+            return this.createFISession().pipe(
+                switchMap(() => {
+                    //TODO：这里有问题，应该建一个联查的起始日期终止日期的VO变量
+                    this.rootUistate['beginDate_VO'] = filter.beginDate;
+                    this.rootUistate['endDate_VO'] = filter.endDate;
+                    this.commandService.execute('LinkViewLoad;1');
+                    return of(true);
+                })
+            );
+            //在联查加载里面给财务session赋值
+            //return this.commandService.execute('LinkViewLoad;1');
         } else {
             return this.commandService.execute('GetInitData1');
         }
@@ -269,7 +288,9 @@ export class AccDocService extends ListRepositoryService {
             return this.commonService.catchError(res);
         }).pipe(
             map((data: any) => {
+                //获取初始的账簿、凭证类型
                 this.rootUistate['year'].value = data.year;
+                this.rootUistate['year_VO'] = data.year;
                 this.rootUistate['AccSet'].key = data.ledger;
                 this.rootUistate['accSet_VO'] = data.ledger;
                 this.rootUistate['AccDocType'].key = data.accDocType;
@@ -278,6 +299,10 @@ export class AccDocService extends ListRepositoryService {
             switchMap(() => {
                 return this.createFISession();
             }),
+            //获取到财务session后切一次年度？？？需不需要
+            /* switchMap(() => {
+                return this.accDocCommonService.changeYear(this.rootUistate['year_VO']);
+            }), */
             switchMap(() => {
                 return this.accDocCommonService.getDataName();
             }),
@@ -289,6 +314,7 @@ export class AccDocService extends ListRepositoryService {
 
     //账簿帮助后事件
     accSetAfterLookUp() {
+        //给账簿表单变量赋值并重新获取默认凭证类型
         const accSet = this.rootUistate['AccSet'].key;
         this.rootUistate['accSet_VO'] = accSet;
 
@@ -311,7 +337,7 @@ export class AccDocService extends ListRepositoryService {
         );
     }
 
-    /****获取财务session(这里主要解决了在前端存储年度和会计期间) */
+    /****获取财务session(这里主要解决了在前端存储年度和会计期间等) */
     createFISession(): Observable<any> {
         const actionSessionUri = `${this.baseUri}/service/Cmp4CreateFISession`;
         const methodType = 'PUT';
@@ -449,7 +475,7 @@ export class AccDocService extends ListRepositoryService {
                 break;
             default:
                 this.formMessageService.error('不存在此操作！');
-                break;
+                return of(false);
         }
         const actionLook$ = this.befRepository.restService.request(actionUriLook, methodType, queryParams, options);
         return actionLook$.catch((res: any) => {
@@ -571,16 +597,12 @@ export class AccDocService extends ListRepositoryService {
     /******按编号查找凭证后的载入事件 */
     /**********按编号查找抽出的方法 */
     lookUpAccDoc() {
-        const year = this.rootUistate['year'].value;
+        //const year = this.rootUistate['year'].value;
         const accDocID = this.rootUistate['AccDocID'].key;
-        const actionYear$ = this.accDocCommonService.changeYear(year);
+        //要不要重新切换年度？应该不需要
+        //const actionYear$ = this.accDocCommonService.changeYear(year);
         this.loadingService.show();
-        return actionYear$.catch((res: any) => {
-            return this.commonService.catchError(res);
-        }).pipe(
-            switchMap(() => {
-                return this.cardDataService.load(accDocID);
-            } ),
+        return this.cardDataService.load(accDocID).pipe(
             switchMap(() => {
                 return  this.accDocCommonService.getNowDataName();
             }),
@@ -636,6 +658,39 @@ export class AccDocService extends ListRepositoryService {
                 })
             );
         }
+    }
+
+
+    /* 编辑操作 */
+    //能否编辑
+    canEitAccDoc() {
+        const actionUriEdit = `${this.baseUri}/service/Cmp4EditAccDoc`;
+        const methodType = 'PUT';
+        const queryParams = {};
+        const headers = new HttpHeaders({ 'Accept': 'application/json' });
+        const accDocID = this.bindingData['id'];
+        if (!accDocID) {
+            return of(false);
+        }
+        const options = {
+            headers: headers,
+            body: {
+                year: this.rootUistate['year_VO'],
+                accDocID: accDocID
+            }
+        };
+        const actionEdit$ = this.befRepository.restService.request(actionUriEdit, methodType, queryParams, options);
+        return actionEdit$.catch((res: any) => {
+            return this.commonService.catchError(res);
+        }).pipe(
+            switchMap(() => {
+                return this.cardDataService.update();
+            }),
+            switchMap(() => {
+                this.stateMachineService.transit('Edit');
+                return of(true);
+            })
+        );
     }
 
 
@@ -831,7 +886,7 @@ export class AccDocService extends ListRepositoryService {
 
     //消息提示
     messageShow() {
-        this.formMessageService.info('客观别急，马上实现！');
+        this.formMessageService.info('客官别急，马上实现！');
     }
 
 

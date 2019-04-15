@@ -1,8 +1,10 @@
 <div class="farris-main-area flex-column farris-overflow-y-hidden">
     <div class="farris-header">
-        <div class="navbar p-0"><label class="farris-form-title mr-auto" for="page-header-title"> <span>
+        <div class="navbar p-0">
+            <label class="farris-form-title mr-auto" for="page-header-title"> <span>
                     {{'page-header-title'|lang:lang}}
-                </span></label>
+                </span>
+            </label>
             <div class="btn-toolbar" id="page-header-toolbar">
                 <button class="btn btn-secondary f-btn-ml" id="button-check" (click)="viewModel.CheckAccDoc1()"
                 [ngClass]="{'d-none': viewModel.uiState['funcID']!=='CheckAccountingDocument'}">
@@ -47,7 +49,7 @@
                     {{'button-add'|lang:lang}}
                 </button>
                 <button class="btn btn-secondary f-btn-ml" id="button-edit" (click)="viewModel.Edit1()"
-                    [disabled]="!viewModel.stateMachine['canEdit'] || viewModel.uiState['CantEdit']">
+                    [disabled]="!viewModel.stateMachine['canEdit']">
                     {{'button-edit'|lang:lang}}
                 </button>
                 <button class="btn btn-secondary f-btn-ml" id="button-save"
@@ -62,16 +64,16 @@
                 </button>
                 <button class="btn btn-secondary f-btn-ml" id="button-delete"
                     (click)="viewModel.basicFormViewmodel.DeleteAccDoc1()"
-                    [disabled]="!viewModel.stateMachine['canRemove'] || viewModel.uiState['CantEdit']">
+                    [disabled]="!viewModel.stateMachine['canRemove']">
                     {{'button-delete'|lang:lang}}
                 </button>
                 <button class="btn btn-secondary f-btn-ml" id="button-previous"
-                    (click)="!viewModel.uiState['funcID'] ? viewModel.basicFormViewmodel.ChangeAccDoc3() : viewModel.ChangeAccDocOnLinkView3()"
+                    (click)="viewModel.basicFormViewmodel.ChangeAccDoc3()"
                     [disabled]="!viewModel.stateMachine['canLook']">
                     {{'button-previous'|lang:lang}}
                 </button>
                 <button class="btn btn-secondary f-btn-ml" id="button-next"
-                    (click)="!viewModel.uiState['funcID'] ? viewModel.basicFormViewmodel.ChangeAccDoc2() : viewModel.ChangeAccDocOnLinkView2()"
+                    (click)="viewModel.basicFormViewmodel.ChangeAccDoc2()"
                     [disabled]="!viewModel.stateMachine['canLook']">
                     {{'button-next'|lang:lang}}
                 </button>

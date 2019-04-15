@@ -64,7 +64,8 @@ import { FDropdownDirective } from '../../../../node_modules0319/@farris/ui/drop
     FrameworkSessionService,
     {
       provide: BE_SERVER_URI_TOKEN,
-      useFactory: function () { return `${window.location.protocol}//${window.location.hostname}:${window.location.port}`; }
+	  //${window.location.port}
+      useFactory: function () { return `${window.location.protocol}//${window.location.hostname}:5000`; }
     },
     GLAccountingDocumentRepository
 

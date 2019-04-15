@@ -171,12 +171,12 @@ export class RootViewmodel extends ViewModel {
   public AccountAccDoc1(): Observable<any> { return; }
 
   @NgCommand({
-    name: 'CanceAccountAccDoc1',
+    name: 'CancelAccountAccDoc1',
     params: {
 
     }
   })
-  public CanceAccountAccDoc1(): Observable<any> { return; }
+  public CancelAccountAccDoc1(): Observable<any> { return; }
 
   @NgCommand({
     name: 'CheckAccDoc1',

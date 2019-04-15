@@ -298,7 +298,7 @@ export class GLAccDocAssistanceComponentViewmodel extends ViewModel {
           "format": "n8",
           "minValue": 0,
           "step": 1,
-          "precision": 4
+          "precision": 2
         },
         "readonly": false,
         "require": false,
