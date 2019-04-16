@@ -213,7 +213,7 @@ export class GLAccDocAssistanceComponentViewmodel extends ViewModel {
           "disable": false,
           "dataSource": {
             "uri": "GLAccDocAssistance.foreignCurrencyID_Name_DFName",
-            "displayName": "Hlp_币种",
+            "displayName": "币种帮助",
             "idField": "id",
             "type": "ViewObject"
           },
@@ -223,7 +223,8 @@ export class GLAccDocAssistanceComponentViewmodel extends ViewModel {
           "mapFields": {
             "id": "foreignCurrencyID.foreignCurrencyID",
             "code.dfCode": "foreignCurrencyID.foreignCurrencyID_Code.dfCode",
-            "name.dfName": "foreignCurrencyID.foreignCurrencyID_Name.dfName"
+            "name.dfName": "foreignCurrencyID.foreignCurrencyID_Name.dfName",
+            "accuracy":"foreignCurrencyID.foreignCurrencyID_Accuracy"
           },
           "displayType": "List"
         },
@@ -334,7 +335,7 @@ export class GLAccDocAssistanceComponentViewmodel extends ViewModel {
           "format": "n8",
           "minValue": 0,
           "step": 1,
-          "precision": 4
+          "precision": 2
         },
         "readonly": false,
         "require": false,

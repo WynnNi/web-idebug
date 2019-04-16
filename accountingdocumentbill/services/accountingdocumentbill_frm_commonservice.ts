@@ -101,19 +101,20 @@ export class AccDocCommonService extends ListRepositoryService {
     /* 外币、汇率、金额的联动计算    单价、数量、金额的联动计算*/
     //由金额往单价、数量、汇率、外币计算都加乘积和金额不相等的判断，相等不计算
     assistanceAmount() {
+        const forCurrencyPrecision=Number(this.bindingData.getValue(['glAccDocEntrys', 'glAccDocAssistances', 'foreignCurrencyID', 'foreignCurrencyID_Accuracy']));
         const foreignCurrency = this.bindingData.getValue(['glAccDocEntrys', 'glAccDocAssistances', 'foreignCurrency']);
         const exchangeRate = this.bindingData.getValue(['glAccDocEntrys', 'glAccDocAssistances', 'exchangeRate']);
         const unitPrice = this.bindingData.getValue(['glAccDocEntrys', 'glAccDocAssistances', 'unitPrice']);
         const quantity = this.bindingData.getValue(['glAccDocEntrys', 'glAccDocAssistances', 'quantity']);
         const amount = this.bindingData.getValue(['glAccDocEntrys', 'glAccDocAssistances', 'amount']);
-        const foreignCurrencyTo4 = Number(foreignCurrency.toFixed(4));
+        const foreignCurrencyTo4 = Number(foreignCurrency.toFixed(forCurrencyPrecision));
         const exchangeRateTo8 = Number((exchangeRate).toFixed(8));
         const amountTo2 = Number(Number(amount).toFixed(2));
         const unitPriceTo2 = Number(unitPrice.toFixed(2));
         const quantityTo2 = Number(quantity.toFixed(2));
         //汇率不为0，计算外币
         if (exchangeRateTo8 - 0 !== 0) {
-            const f4 = Number((amountTo2 / exchangeRateTo8).toFixed(4));
+            const f4 = Number((amountTo2 / exchangeRateTo8).toFixed(forCurrencyPrecision));
             if (f4 - foreignCurrencyTo4 !== 0) {
                 setTimeout(() => {
                     this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'foreignCurrency'], f4, true, true);

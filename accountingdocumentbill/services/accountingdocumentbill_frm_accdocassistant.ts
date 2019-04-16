@@ -495,11 +495,21 @@ export class AccDocAssistanceService extends ListRepositoryService {
                 this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'foreignCurrencyID', 'foreignCurrencyID'], null, true);
                 this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'foreignCurrencyID', 'foreignCurrencyID_Code', 'dfCode'], null, true);
                 this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'foreignCurrencyID', 'foreignCurrencyID_Name', 'dfName'], null, true);
+                this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'foreignCurrencyID', 'foreignCurrencyID_Accuracy'], null, true);
                 this.bindingData.setValue(['glAccDocEntrys', 'glAccDocAssistances', 'exchangeRate'], 0, true);
             }, 0);
             return this.commonService.catchError(res);
         }).pipe(
             switchMap((data: any) => {
+                const glAssistanceViewModel = this.frameContext.appContext.getFrameContext('glaccdocassistance-component').viewModel as GLAccDocAssistanceComponentViewmodel;
+                const fields = glAssistanceViewModel.dom.dataGrid_GLAccDocAssistance.fields;
+                //根据币种精度动态设置外币精度
+                fields.forEach(field => {
+                    if (field.id === 'gridField_foreignCurrency' && field.editor.type === 'NumericBox') {
+                        const fPrecision = this.bindingData.getValue(['glAccDocEntrys', 'glAccDocAssistances', 'foreignCurrencyID', 'foreignCurrencyID_Accuracy']) as number;
+                        field.editor['precision'] = fPrecision;
+                    }
+                });
                 const exchangeRate = data.returnValue;
                 accDocAssistance.exchangeRate = Number(exchangeRate);
                 return of(true);

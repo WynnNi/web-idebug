@@ -118,8 +118,8 @@ export class AccDocEntryService extends ListRepositoryService {
     }
 
     //复制分录
-    copyAccDocEntry(accDocID: string, accDeocEntryID: string) {
-        if (accDeocEntryID !== undefined && accDeocEntryID !== 'undefined') {
+    copyAccDocEntry(accDocID: string, accDocEntryID: string) {
+        if (accDocEntryID !== undefined && accDocEntryID !== 'undefined') {
             this.loadingService.show();
             const actionUriCopy = `${this.baseUri}/service/CreateAccDocEntry`;
             const methodType = 'PUT';
@@ -130,7 +130,7 @@ export class AccDocEntryService extends ListRepositoryService {
                 body: {
                     year: '2019',
                     accDocID: accDocID,
-                    accDocEntryID: accDeocEntryID,
+                    accDocEntryID: accDocEntryID,
                     index: '10'
                 }
             };
@@ -197,6 +197,10 @@ export class AccDocEntryService extends ListRepositoryService {
                 return this.commonService.catchError(res);
             }).pipe(
                 switchMap(() => {
+                    this.bindingDataService.setCurrentId(accDeocEntryID, 'glaccdocentry-component');
+                    return of(true);
+                }),
+                switchMap(() => {
                     return  this.cardDataService.update();
                 }),
                 tap(() => {
@@ -225,6 +229,10 @@ export class AccDocEntryService extends ListRepositoryService {
             return actionMoveDown$.catch((res: any) => {
                 return this.commonService.catchError(res);
             }).pipe(
+                switchMap(() => {
+                    this.bindingDataService.setCurrentId(accDeocEntryID, 'glaccdocentry-component');
+                    return of(true);
+                }),
                 switchMap(() => {
                     return  this.cardDataService.update();
                 }),
